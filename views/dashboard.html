@@ -1,0 +1,2483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BIG DADDY V3 — Dashboard</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --red:         #e8002d;
+            --red-hover:   #c4002a;
+            --red-soft:    rgba(232,0,45,0.08);
+            --red-ring:    rgba(232,0,45,0.16);
+            --red-border:  rgba(232,0,45,0.22);
+
+            --bg:          #0d0f14;
+            --surface:     #161a22;
+            --surface-2:   #1d2130;
+            --surface-3:   #232840;
+
+            --border:      rgba(255,255,255,0.06);
+            --border-2:    rgba(255,255,255,0.1);
+
+            --text-1:      #f0f2f7;
+            --text-2:      #8892a4;
+            --text-3:      #4a5568;
+
+            --green:       #10b981;
+            --amber:       #f59e0b;
+            --blue:        #3b82f6;
+
+            --sidebar-w:   252px;
+
+            --radius-sm:   0.5rem;
+            --radius-md:   0.75rem;
+            --radius-lg:   1rem;
+
+            --shadow-sm:   0 1px 3px rgba(0,0,0,0.25);
+            --shadow-md:   0 4px 14px rgba(0,0,0,0.35);
+            --shadow-lg:   0 12px 36px rgba(0,0,0,0.5);
+
+            --trans:       all 200ms ease;
+        }
+
+        html, body { height: 100%; overflow: hidden; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: radial-gradient(900px 600px at 0% 0%, rgba(232,0,45,0.1), transparent 55%),
+                        radial-gradient(700px 500px at 100% 100%, rgba(232,0,45,0.06), transparent 55%),
+                        var(--bg);
+            color: var(--text-1);
+            display: flex;
+            -webkit-font-smoothing: antialiased;
+            line-height: 1.5;
+        }
+
+        /* ═══════════ SCROLLBAR ═══════════ */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(232,0,45,0.5); }
+
+        /* ═══════════ SIDEBAR ════════════ */
+        .sidebar {
+            width: var(--sidebar-w);
+            flex-shrink: 0;
+            background: var(--surface);
+            border-right: 1px solid var(--border-2);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            z-index: 30;
+            transition: transform 0.28s ease;
+        }
+
+        .sidebar-brand {
+            padding: 1.375rem 1.25rem 1.125rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand-name {
+            font-size: 1.125rem;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+            color: var(--text-1);
+        }
+
+        .brand-name em { color: var(--red); font-style: normal; }
+
+        .brand-sub {
+            font-size: 0.6875rem;
+            color: var(--text-3);
+            margin-top: 0.125rem;
+            letter-spacing: 0.04em;
+        }
+
+        /* User row */
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .u-avatar {
+            width: 2.25rem;
+            height: 2.25rem;
+            border-radius: var(--radius-md);
+            background: var(--red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 0.875rem;
+            color: #fff;
+            flex-shrink: 0;
+        }
+
+        .u-name {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-1);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .u-status {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.6875rem;
+            color: var(--green);
+            margin-top: 0.125rem;
+        }
+
+        .u-dot {
+            width: 5px; height: 5px;
+            border-radius: 50%;
+            background: var(--green);
+            animation: blink 2.5s ease infinite;
+        }
+
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+        /* Nav */
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0.625rem 0;
+        }
+
+        .nav-label {
+            font-size: 0.625rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            color: var(--text-3);
+            padding: 0.875rem 1.25rem 0.375rem;
+            text-transform: uppercase;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            padding: 0.5625rem 1rem;
+            margin: 0.125rem 0.5rem;
+            border-radius: var(--radius-md);
+            color: var(--text-2);
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--trans);
+            border: 1px solid transparent;
+            user-select: none;
+        }
+
+        .nav-item .icon {
+            width: 1.5rem;
+            text-align: center;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+
+        .nav-item:hover {
+            color: var(--text-1);
+            background: rgba(255,255,255,0.04);
+        }
+
+        .nav-item.active {
+            color: var(--text-1);
+            background: var(--red-soft);
+            border-color: var(--red-border);
+            font-weight: 600;
+        }
+
+        .nav-item.active .icon { color: var(--red); }
+
+        .nav-badge {
+            margin-left: auto;
+            font-size: 0.6rem;
+            font-weight: 700;
+            background: var(--red);
+            color: #fff;
+            padding: 0.125rem 0.4rem;
+            border-radius: 999px;
+            min-width: 1.1rem;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        .nav-badge.green { background: var(--green); color: #000; }
+
+        /* Slot usage */
+        .sidebar-footer {
+            padding: 0.875rem 1.125rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .slot-usage {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 0.75rem;
+            margin-bottom: 0.625rem;
+        }
+
+        .slot-usage-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            color: var(--text-2);
+            margin-bottom: 0.5rem;
+        }
+
+        .slot-usage-row strong { color: var(--text-1); }
+
+        .slot-bar {
+            height: 3px;
+            background: var(--border-2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .slot-fill {
+            height: 100%;
+            background: var(--red);
+            border-radius: 2px;
+            transition: width 0.4s ease;
+        }
+
+        .btn-logout {
+            width: 100%;
+            padding: 0.5625rem;
+            background: transparent;
+            border: 1px solid var(--border-2);
+            border-radius: var(--radius-md);
+            color: var(--text-2);
+            font-size: 0.8125rem;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: var(--trans);
+        }
+
+        .btn-logout:hover { border-color: var(--red-border); color: var(--red); }
+
+        /* Mobile overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            z-index: 25;
+        }
+
+        /* ═══════════ MAIN ════════════════ */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            min-width: 0;
+        }
+
+        /* Topbar */
+        .topbar {
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+            padding: 0 1.25rem;
+            height: 3.75rem;
+            border-bottom: 1px solid var(--border-2);
+            background: var(--surface);
+            flex-shrink: 0;
+        }
+
+        .topbar-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-1);
+        }
+
+        .topbar-spacer { flex: 1; }
+
+        .topbar-actions { display: flex; align-items: center; gap: 0.5rem; }
+
+        .icon-btn {
+            width: 2.25rem;
+            height: 2.25rem;
+            border-radius: var(--radius-md);
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            color: var(--text-2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--trans);
+            position: relative;
+        }
+
+        .icon-btn:hover { border-color: var(--red-border); color: var(--red); }
+
+        .notif-pip {
+            position: absolute;
+            top: 5px; right: 5px;
+            width: 6px; height: 6px;
+            background: var(--red);
+            border-radius: 50%;
+            border: 1.5px solid var(--surface);
+        }
+
+        .hamburger { display: none; }
+
+        /* Page content */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1.5rem;
+        }
+
+        /* Pages */
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.2s ease; }
+
+        @keyframes fadeIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+
+        /* ═══════════ SHARED COMPONENTS ══ */
+
+        .page-head { margin-bottom: 1.375rem; }
+        .page-head h2 { font-size: 1.25rem; font-weight: 700; color: var(--text-1); }
+        .page-head p  { font-size: 0.8125rem; color: var(--text-2); margin-top: 0.2rem; }
+
+        .page-head-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            margin-bottom: 1.375rem;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border-2);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem;
+            box-shadow: var(--shadow-sm);
+            transition: var(--trans);
+        }
+
+        .card:hover { box-shadow: var(--shadow-md); }
+
+        .card-title {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--text-1);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-title .icon { color: var(--red); font-size: 0.8rem; }
+
+        /* Grid */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 0.875rem; }
+
+        /* Stat tile */
+        .stat-tile {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+        }
+
+        .stat-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: var(--radius-sm);
+            background: var(--red-soft);
+            border: 1px solid var(--red-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--red);
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+
+        .stat-value {
+            font-size: 1.375rem;
+            font-weight: 800;
+            color: var(--text-1);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-2);
+            margin-top: 0.2rem;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            padding: 0.5625rem 1rem;
+            border-radius: var(--radius-md);
+            font-size: 0.875rem;
+            font-weight: 600;
+            font-family: inherit;
+            border: none;
+            cursor: pointer;
+            transition: var(--trans);
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn-primary   { background: var(--red); color: #fff; }
+        .btn-primary:hover:not(:disabled) { background: var(--red-hover); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(232,0,45,0.3); }
+
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid var(--border-2);
+            color: var(--text-2);
+        }
+        .btn-ghost:hover { border-color: var(--red-border); color: var(--text-1); }
+
+        .btn-danger {
+            background: var(--red-soft);
+            border: 1px solid var(--red-border);
+            color: var(--red);
+        }
+        .btn-danger:hover { background: rgba(232,0,45,0.15); }
+
+        .btn-success {
+            background: rgba(16,185,129,0.1);
+            border: 1px solid rgba(16,185,129,0.25);
+            color: var(--green);
+        }
+
+        .btn-sm { padding: 0.375rem 0.75rem; font-size: 0.8125rem; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .spinner {
+            width: 14px; height: 14px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spin 0.75s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Badge / status pill */
+        .pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.6875rem;
+            font-weight: 600;
+            padding: 0.2rem 0.55rem;
+            border-radius: 999px;
+        }
+
+        .pill-green  { background: rgba(16,185,129,0.1); color: var(--green); border: 1px solid rgba(16,185,129,0.25); }
+        .pill-red    { background: var(--red-soft); color: var(--red); border: 1px solid var(--red-border); }
+        .pill-amber  { background: rgba(245,158,11,0.1); color: var(--amber); border: 1px solid rgba(245,158,11,0.25); }
+        .pill-muted  { background: rgba(255,255,255,0.05); color: var(--text-2); border: 1px solid var(--border-2); }
+
+        .pill-dot {
+            width: 5px; height: 5px;
+            border-radius: 50%;
+            background: currentColor;
+        }
+
+        .pill-dot.pulse { animation: blink 1.5s ease infinite; }
+
+        /* Divider */
+        .divider { height: 1px; background: var(--border); margin: 1rem 0; }
+
+        /* Form fields */
+        .field { margin-bottom: 0.875rem; }
+
+        .field label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-2);
+            margin-bottom: 0.35rem;
+            letter-spacing: 0.03em;
+        }
+
+        .field input,
+        .field select,
+        .field textarea {
+            width: 100%;
+            padding: 0.625rem 0.875rem;
+            background: var(--surface-2);
+            border: 1.5px solid var(--border-2);
+            border-radius: var(--radius-md);
+            font-size: 0.9rem;
+            color: var(--text-1);
+            font-family: inherit;
+            outline: none;
+            transition: var(--trans);
+            caret-color: var(--red);
+        }
+
+        .field input::placeholder,
+        .field textarea::placeholder { color: var(--text-3); }
+
+        .field input:focus,
+        .field select:focus,
+        .field textarea:focus {
+            border-color: var(--red);
+            background: rgba(232,0,45,0.04);
+            box-shadow: 0 0 0 3px var(--red-ring);
+        }
+
+        .field select option { background: var(--surface-2); }
+        .field textarea { resize: vertical; min-height: 90px; }
+
+        /* ═════════════ HOME PAGE ═════════ */
+
+        .welcome-banner {
+            background: linear-gradient(135deg, rgba(232,0,45,0.14) 0%, rgba(232,0,45,0.04) 60%, transparent 100%);
+            border: 1px solid var(--red-border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .welcome-banner h3 {
+            font-size: 1.125rem;
+            font-weight: 800;
+            color: var(--text-1);
+            margin-bottom: 0.25rem;
+        }
+
+        .welcome-banner h3 span { color: var(--red); }
+
+        .welcome-banner p { font-size: 0.8125rem; color: var(--text-2); }
+
+        .welcome-actions { display: flex; gap: 0.625rem; flex-wrap: wrap; }
+
+        /* ═════════════ BOT SLOTS PAGE ════ */
+
+        .bot-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
+            gap: 1rem;
+        }
+
+        .bot-card {
+            background: var(--surface);
+            border: 1px solid var(--border-2);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: var(--trans);
+        }
+
+        .bot-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+        .bot-card.running { border-color: rgba(16,185,129,0.3); }
+        .bot-card.verifying { border-color: rgba(245,158,11,0.3); }
+        .bot-card.empty { border-style: dashed; border-color: var(--border-2); }
+
+        .bot-card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            background: rgba(255,255,255,0.02);
+        }
+
+        .bot-slot-num {
+            font-size: 0.6875rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            color: var(--text-3);
+        }
+
+        /* Empty state */
+        .bot-empty {
+            padding: 2rem 1.25rem;
+            text-align: center;
+        }
+
+        .bot-empty-icon {
+            width: 3rem; height: 3rem;
+            border-radius: var(--radius-md);
+            background: var(--surface-2);
+            border: 1px dashed var(--border-2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--text-3);
+            margin: 0 auto 0.875rem;
+        }
+
+        .bot-empty h4 { font-size: 0.9rem; font-weight: 600; color: var(--text-2); margin-bottom: 0.3rem; }
+        .bot-empty p { font-size: 0.775rem; color: var(--text-3); margin-bottom: 1rem; }
+
+        /* Running / verifying state */
+        .bot-body { padding: 1rem; }
+
+        .bot-name { font-size: 1rem; font-weight: 700; color: var(--text-1); margin-bottom: 0.2rem; }
+        .bot-number { font-size: 0.8125rem; color: var(--text-2); font-variant-numeric: tabular-nums; margin-bottom: 0.875rem; }
+
+        .bot-metrics {
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            gap: 0.5rem;
+            margin-bottom: 0.875rem;
+        }
+
+        .bot-metric {
+            background: var(--surface-2);
+            border-radius: var(--radius-sm);
+            padding: 0.5rem;
+            text-align: center;
+        }
+
+        .bot-metric strong { display: block; font-size: 0.9375rem; font-weight: 700; }
+        .bot-metric span { font-size: 0.625rem; color: var(--text-3); text-transform: uppercase; letter-spacing: 0.05em; }
+
+        .bot-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+        /* ═════════════ DEPLOY PAGE ═══════ */
+
+        .deploy-layout {
+            display: grid;
+            grid-template-columns: 1fr 200px;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Slot tabs */
+        .slot-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .slot-tab {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            padding: 0.5rem 0.875rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-2);
+            background: var(--surface-2);
+            color: var(--text-2);
+            font-size: 0.8125rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--trans);
+        }
+
+        .slot-tab.active {
+            background: var(--red-soft);
+            border-color: var(--red-border);
+            color: var(--text-1);
+            font-weight: 600;
+        }
+
+        .tab-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--text-3);
+        }
+
+        .tab-dot.on     { background: var(--green); box-shadow: 0 0 5px var(--green); }
+        .tab-dot.amber  { background: var(--amber); }
+
+        /* Prefix selector */
+        .prefix-row {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .prefix-opt input { display: none; }
+
+        .prefix-opt label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: var(--radius-md);
+            border: 1.5px solid var(--border-2);
+            background: var(--surface-2);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-2);
+            cursor: pointer;
+            transition: var(--trans);
+            font-family: 'Courier New', monospace;
+        }
+
+        .prefix-opt input:checked + label {
+            border-color: var(--red);
+            background: var(--red-soft);
+            color: var(--red);
+        }
+
+        .prefix-opt label:hover { border-color: var(--red-border); color: var(--text-1); }
+
+        /* Pairing code box */
+        .pairing-box {
+            display: none;
+            background: var(--surface-2);
+            border: 1.5px solid var(--border-2);
+            border-radius: var(--radius-md);
+            padding: 1.125rem;
+            text-align: center;
+            margin-top: 0.875rem;
+        }
+
+        .pairing-box.show { display: block; }
+
+        .pairing-label { font-size: 0.6875rem; font-weight: 700; color: var(--text-2); letter-spacing: 0.08em; margin-bottom: 0.625rem; }
+
+        .pairing-code {
+            font-size: 1.875rem;
+            font-weight: 800;
+            letter-spacing: 0.22em;
+            color: var(--red);
+            font-family: 'Courier New', monospace;
+        }
+
+        .pairing-steps {
+            font-size: 0.75rem;
+            color: var(--text-2);
+            text-align: left;
+            margin-top: 0.875rem;
+            line-height: 1.7;
+        }
+
+        .pairing-steps li { list-style: none; padding-left: 0.5rem; }
+        .pairing-steps li::before { content: '›  '; color: var(--red); }
+
+        /* Status sidebar */
+        .deploy-status-card { display: flex; flex-direction: column; gap: 0.625rem; }
+
+        .status-row {
+            background: var(--surface-2);
+            border-radius: var(--radius-md);
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+        }
+
+        .status-row .sr-label {
+            font-size: 0.625rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-3);
+            margin-bottom: 0.3rem;
+        }
+
+        .status-row .sr-value {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--text-1);
+        }
+
+        /* Console */
+        .console-wrap {
+            background: #07090e;
+            border: 1px solid var(--border-2);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .console-titlebar {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.625rem 1rem;
+            background: var(--surface-2);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tc-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .tc-dot.r { background: #ff5f57; }
+        .tc-dot.y { background: #febc2e; }
+        .tc-dot.g { background: #28c840; }
+
+        .console-label {
+            font-size: 0.6875rem;
+            color: var(--text-3);
+            margin-left: 0.375rem;
+            flex: 1;
+        }
+
+        .console-out {
+            height: 280px;
+            overflow-y: auto;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.775rem;
+            line-height: 1.7;
+        }
+
+        .cl { display: block; }
+        .cl .ts { color: var(--text-3); margin-right: 0.5rem; user-select: none; }
+        .cl.success .msg { color: #4ade80; }
+        .cl.error   .msg { color: #f87171; }
+        .cl.warn    .msg { color: #fbbf24; }
+        .cl.info    .msg { color: #60a5fa; }
+        .cl.default .msg { color: #94a3b8; }
+
+        /* ═════════════ COMMUNITY ═════════ */
+
+        .community-layout {
+            display: grid;
+            grid-template-columns: 1fr 260px;
+            gap: 1rem;
+            height: calc(100vh - 9rem);
+        }
+
+        .chat-panel {
+            background: var(--surface);
+            border: 1px solid var(--border-2);
+            border-radius: var(--radius-lg);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-top {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1.125rem;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface-2);
+            flex-shrink: 0;
+        }
+
+        .chat-channel-icon {
+            width: 2rem;
+            height: 2rem;
+            border-radius: var(--radius-sm);
+            background: var(--red-soft);
+            border: 1px solid var(--red-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--red);
+            font-size: 0.8rem;
+        }
+
+        .chat-channel-name { font-size: 0.9rem; font-weight: 700; }
+        .chat-channel-sub  { font-size: 0.7rem; color: var(--green); }
+
+        .chat-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.875rem;
+        }
+
+        .sys-msg {
+            align-self: center;
+            font-size: 0.7rem;
+            color: var(--text-3);
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+        }
+
+        .msg-row {
+            display: flex;
+            gap: 0.625rem;
+            align-items: flex-start;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .msg-row.own { flex-direction: row-reverse; }
+
+        .msg-av {
+            width: 1.875rem;
+            height: 1.875rem;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 800;
+            flex-shrink: 0;
+            color: #fff;
+        }
+
+        .msg-bubble {
+            max-width: 72%;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 0.6rem 0.875rem;
+        }
+
+        .msg-row.own .msg-bubble {
+            background: var(--red-soft);
+            border-color: var(--red-border);
+        }
+
+        .msg-author { font-size: 0.6875rem; font-weight: 700; margin-bottom: 0.2rem; }
+        .msg-row.own .msg-author { display: none; }
+        .msg-text  { font-size: 0.85rem; color: var(--text-1); line-height: 1.45; word-break: break-word; }
+        .msg-time  { font-size: 0.625rem; color: var(--text-3); margin-top: 0.3rem; text-align: right; }
+
+        .chat-input-row {
+            display: flex;
+            gap: 0.5rem;
+            padding: 0.875rem;
+            border-top: 1px solid var(--border);
+            background: var(--surface-2);
+            flex-shrink: 0;
+            align-items: flex-end;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: var(--surface);
+            border: 1.5px solid var(--border-2);
+            border-radius: var(--radius-md);
+            padding: 0.6rem 0.875rem;
+            font-size: 0.875rem;
+            color: var(--text-1);
+            font-family: inherit;
+            outline: none;
+            transition: var(--trans);
+            resize: none;
+            max-height: 100px;
+            caret-color: var(--red);
+        }
+
+        .chat-input:focus { border-color: var(--red-border); }
+        .chat-input::placeholder { color: var(--text-3); }
+
+        .chat-send {
+            width: 2.25rem;
+            height: 2.25rem;
+            border-radius: var(--radius-md);
+            background: var(--red);
+            border: none;
+            color: #fff;
+            font-size: 0.875rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--trans);
+            flex-shrink: 0;
+        }
+
+        .chat-send:hover { background: var(--red-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(232,0,45,0.3); }
+
+        /* Community aside */
+        .community-aside {
+            display: flex;
+            flex-direction: column;
+            gap: 0.875rem;
+            overflow-y: auto;
+        }
+
+        .member-list { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.75rem; }
+
+        .member-row {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            padding: 0.5rem 0.625rem;
+            border-radius: var(--radius-sm);
+            background: var(--surface-2);
+        }
+
+        .member-av {
+            width: 1.625rem;
+            height: 1.625rem;
+            border-radius: 0.375rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .member-name { font-size: 0.8125rem; font-weight: 600; flex: 1; }
+        .member-badge { font-size: 0.625rem; color: var(--green); }
+
+        .announce-item {
+            background: var(--surface-2);
+            border-left: 3px solid var(--red);
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            padding: 0.625rem 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .announce-title { font-size: 0.8125rem; font-weight: 700; margin-bottom: 0.2rem; }
+        .announce-body  { font-size: 0.75rem; color: var(--text-2); line-height: 1.45; }
+        .announce-time  { font-size: 0.625rem; color: var(--text-3); margin-top: 0.3rem; }
+
+        /* ═════════════ SUPPORT ═══════════ */
+
+        .support-layout { display: grid; grid-template-columns: 1fr 340px; gap: 1rem; }
+
+        .ticket-item {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--border-2);
+            border-radius: var(--radius-md);
+            padding: 0.875rem 1rem;
+            cursor: pointer;
+            transition: var(--trans);
+            margin-bottom: 0.5rem;
+        }
+
+        .ticket-item:hover { background: rgba(255,255,255,0.03); }
+        .ticket-item.open     { border-left-color: var(--green); }
+        .ticket-item.pending  { border-left-color: var(--amber); }
+        .ticket-item.closed   { border-left-color: var(--text-3); }
+
+        .ticket-row  { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.3rem; }
+        .ticket-id   { font-size: 0.6875rem; color: var(--text-3); font-family: 'Courier New', monospace; }
+        .ticket-subj { font-size: 0.875rem; font-weight: 600; margin-bottom: 0.25rem; }
+        .ticket-prev { font-size: 0.775rem; color: var(--text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .ticket-time { font-size: 0.6875rem; color: var(--text-3); margin-top: 0.375rem; }
+
+        .channel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem; margin-top: 0.875rem; }
+
+        .channel-item {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            padding: 0.75rem;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            text-decoration: none;
+            transition: var(--trans);
+        }
+
+        .channel-item:hover { border-color: var(--red-border); background: var(--red-soft); }
+
+        .ch-icon {
+            width: 2rem;
+            height: 2rem;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+
+        .ch-icon.tg { background: rgba(59,130,246,0.12); color: var(--blue); }
+        .ch-icon.rd { background: var(--red-soft); color: var(--red); }
+        .ch-icon.gn { background: rgba(16,185,129,0.1); color: var(--green); }
+        .ch-icon.am { background: rgba(245,158,11,0.1); color: var(--amber); }
+
+        .ch-name { font-size: 0.8125rem; font-weight: 600; }
+        .ch-sub  { font-size: 0.7rem; color: var(--text-2); }
+
+        /* Notifications panel */
+        .notif-panel {
+            position: fixed;
+            top: 4.25rem;
+            right: 1rem;
+            width: 300px;
+            background: var(--surface);
+            border: 1px solid var(--border-2);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            z-index: 100;
+            display: none;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .notif-panel.show { display: block; }
+
+        .notif-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.875rem 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .notif-header strong { font-size: 0.875rem; }
+
+        .notif-clear-btn {
+            font-size: 0.75rem;
+            color: var(--red);
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .notif-scroll { max-height: 300px; overflow-y: auto; }
+
+        .notif-item {
+            display: flex;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--border);
+            transition: background 0.15s;
+        }
+
+        .notif-item:last-child { border-bottom: none; }
+        .notif-item:hover { background: rgba(255,255,255,0.02); }
+        .notif-item.unread { background: var(--red-soft); }
+
+        .ni-icon {
+            width: 2rem;
+            height: 2rem;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            flex-shrink: 0;
+        }
+
+        .ni-icon.s { background: rgba(16,185,129,0.1); color: var(--green); }
+        .ni-icon.e { background: var(--red-soft); color: var(--red); }
+        .ni-icon.i { background: rgba(59,130,246,0.1); color: var(--blue); }
+        .ni-icon.w { background: rgba(245,158,11,0.1); color: var(--amber); }
+
+        .ni-title { font-size: 0.8125rem; font-weight: 600; margin-bottom: 0.15rem; }
+        .ni-body  { font-size: 0.75rem; color: var(--text-2); }
+        .ni-time  { font-size: 0.625rem; color: var(--text-3); margin-top: 0.2rem; }
+
+        /* Modal */
+        .modal-bg {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.65);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(3px);
+        }
+
+        .modal-bg.show { display: flex; }
+
+        .modal-box {
+            background: var(--surface);
+            border: 1px solid var(--border-2);
+            border-radius: var(--radius-lg);
+            width: 90%;
+            max-width: 400px;
+            overflow: hidden;
+            animation: fadeIn 0.2s ease;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-head h3 { font-size: 1rem; font-weight: 700; }
+
+        .modal-close {
+            background: none; border: none;
+            color: var(--text-2); font-size: 1.1rem;
+            cursor: pointer; transition: var(--trans);
+        }
+
+        .modal-close:hover { color: var(--red); }
+
+        .modal-body { padding: 1.125rem 1.25rem; }
+        .modal-body p { font-size: 0.875rem; color: var(--text-2); }
+
+        .modal-foot {
+            display: flex;
+            gap: 0.625rem;
+            justify-content: flex-end;
+            padding: 0.875rem 1.25rem;
+            border-top: 1px solid var(--border);
+        }
+
+        /* Docs */
+        .docs-wrap { max-width: 720px; }
+        .docs-section { margin-bottom: 2rem; }
+        .docs-section h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            padding-bottom: 0.625rem;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .docs-section h3 .icon { color: var(--red); }
+        .docs-section p, .docs-section li { font-size: 0.875rem; color: var(--text-2); line-height: 1.65; margin-bottom: 0.5rem; }
+        .docs-section ol, .docs-section ul { padding-left: 1.25rem; }
+        .docs-section a { color: var(--red); text-decoration: none; }
+
+        .code-block {
+            background: #07090e;
+            border: 1px solid var(--border-2);
+            border-radius: var(--radius-md);
+            padding: 0.875rem 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.775rem;
+            color: #7dd3fc;
+            overflow-x: auto;
+            margin: 0.75rem 0;
+            line-height: 1.7;
+        }
+
+        /* Settings */
+        .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.875rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .setting-item:last-child { border-bottom: none; }
+        .setting-label { font-size: 0.875rem; font-weight: 600; }
+        .setting-desc  { font-size: 0.75rem; color: var(--text-2); margin-top: 0.15rem; }
+
+        .toggle {
+            width: 2.5rem;
+            height: 1.375rem;
+            border-radius: 999px;
+            background: var(--border-2);
+            position: relative;
+            cursor: pointer;
+            transition: background 0.22s ease;
+            flex-shrink: 0;
+        }
+
+        .toggle.on { background: var(--red); }
+
+        .toggle-knob {
+            position: absolute;
+            top: 2px; left: 2px;
+            width: 1rem; height: 1rem;
+            border-radius: 50%;
+            background: #fff;
+            transition: transform 0.22s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .toggle.on .toggle-knob { transform: translateX(1.125rem); }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 1024px) {
+            .community-layout { grid-template-columns: 1fr; height: auto; }
+            .community-aside { flex-direction: row; overflow-x: auto; }
+            .community-aside .card { min-width: 240px; }
+            .support-layout { grid-template-columns: 1fr; }
+            .deploy-layout { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed; top:0; left:0; height:100%;
+                transform: translateX(-100%); z-index: 35;
+            }
+            .sidebar.open { transform: translateX(0); }
+            .sidebar-overlay.show { display: block; }
+            .hamburger { display: flex !important; }
+            .grid-4 { grid-template-columns: 1fr 1fr; }
+            .grid-3 { grid-template-columns: 1fr 1fr; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .bot-grid { grid-template-columns: 1fr; }
+            .content { padding: 1rem; }
+        }
+
+        @media (max-width: 480px) {
+            .grid-4 { grid-template-columns: 1fr 1fr; }
+            .grid-3 { grid-template-columns: 1fr; }
+            .channel-grid { grid-template-columns: 1fr; }
+            .community-layout { height: auto; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════════ SIDEBAR ═══════════════ -->
+<aside class="sidebar" id="sidebar">
+
+    <div class="sidebar-brand">
+        <div class="brand-name">BIG DADDY <em>V3</em></div>
+        <div class="brand-sub">Bot Deployment Platform</div>
+    </div>
+
+    <div class="sidebar-user">
+        <div class="u-avatar" id="sidebarAvatar">JD</div>
+        <div>
+            <div class="u-name" id="sidebarName">Loading…</div>
+            <div class="u-status"><div class="u-dot"></div> Online</div>
+        </div>
+    </div>
+
+    <nav class="sidebar-nav">
+        <div class="nav-label">Main</div>
+        <div class="nav-item active" onclick="gotoPage('home',this)">
+            <span class="icon">⊞</span> Overview
+        </div>
+        <div class="nav-item" onclick="gotoPage('bots',this)">
+            <span class="icon">🤖</span> My Bots
+            <span class="nav-badge green" id="navBotCount">0</span>
+        </div>
+        <div class="nav-item" onclick="gotoPage('deploy',this)">
+            <span class="icon">🚀</span> Deploy Bot
+        </div>
+
+        <div class="nav-label">Community</div>
+        <div class="nav-item" onclick="gotoPage('community',this)">
+            <span class="icon">💬</span> Community Chat
+            <span class="nav-badge" id="communityBadge" style="display:none">●</span>
+        </div>
+        <div class="nav-item" onclick="gotoPage('support',this)">
+            <span class="icon">🛟</span> Support
+        </div>
+
+        <div class="nav-label">Resources</div>
+        <div class="nav-item" onclick="gotoPage('docs',this)">
+            <span class="icon">📖</span> Documentation
+        </div>
+        <div class="nav-item" onclick="gotoPage('settings',this)">
+            <span class="icon">⚙️</span> Settings
+        </div>
+    </nav>
+
+    <div class="sidebar-footer">
+        <div class="slot-usage">
+            <div class="slot-usage-row">
+                <span>Bot slots used</span>
+                <strong id="slotUsageLabel">0 / 3</strong>
+            </div>
+            <div class="slot-bar">
+                <div class="slot-fill" id="slotFill" style="width:0%"></div>
+            </div>
+        </div>
+        <button class="btn-logout" onclick="doLogout()">⎋ &nbsp;Sign Out</button>
+    </div>
+</aside>
+
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- ═══════════════ MAIN ═══════════════ -->
+<div class="main">
+
+    <!-- Topbar -->
+    <div class="topbar">
+        <button class="icon-btn hamburger" id="hamburger" onclick="toggleSidebar()">☰</button>
+        <span class="topbar-title" id="topbarTitle">Overview</span>
+        <div class="topbar-spacer"></div>
+        <div class="topbar-actions">
+            <div class="icon-btn" id="notifToggle" onclick="toggleNotifPanel()">
+                🔔
+                <div class="notif-pip" id="notifPip"></div>
+            </div>
+            <div class="icon-btn" onclick="gotoPage('settings', document.querySelector('[onclick*=settings]'))">⚙️</div>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="content">
+
+        <!-- ══ HOME ══ -->
+        <div class="page active" id="page-home">
+
+            <div class="welcome-banner">
+                <div>
+                    <h3>Welcome back, <span id="homeName">User</span> 👋</h3>
+                    <p>Your deployment platform is ready. You can run up to 3 bots simultaneously.</p>
+                </div>
+                <div class="welcome-actions">
+                    <button class="btn btn-primary" onclick="gotoPage('deploy',null)">🚀 &nbsp;Deploy Bot</button>
+                    <button class="btn btn-ghost" onclick="gotoPage('bots',null)">🤖 &nbsp;My Bots</button>
+                </div>
+            </div>
+
+            <div class="grid-4" style="margin-bottom:1.25rem;">
+                <div class="stat-tile">
+                    <div class="stat-icon">🤖</div>
+                    <div><div class="stat-value" id="homeActiveBots">0</div><div class="stat-label">Active Bots</div></div>
+                </div>
+                <div class="stat-tile">
+                    <div class="stat-icon">📦</div>
+                    <div><div class="stat-value">3</div><div class="stat-label">Total Slots</div></div>
+                </div>
+                <div class="stat-tile">
+                    <div class="stat-icon">👥</div>
+                    <div><div class="stat-value" id="homeOnline">24</div><div class="stat-label">Online Members</div></div>
+                </div>
+                <div class="stat-tile">
+                    <div class="stat-icon">⏱</div>
+                    <div><div class="stat-value" id="homeUptime">—</div><div class="stat-label">Bot Uptime</div></div>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-title"><span class="icon">🤖</span> Bot Slots</div>
+                    <div id="homeSlotList" style="display:flex;flex-direction:column;gap:0.5rem;"></div>
+                    <div style="margin-top:1rem;">
+                        <button class="btn btn-primary btn-sm" onclick="gotoPage('deploy',null)">+ Deploy New Bot</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-title"><span class="icon">⚡</span> Quick Actions</div>
+                    <div style="display:flex;flex-direction:column;gap:0.5rem;">
+                        <button class="btn btn-ghost" style="justify-content:flex-start;width:100%;" onclick="gotoPage('community',null)">💬 &nbsp;Open Community Chat</button>
+                        <button class="btn btn-ghost" style="justify-content:flex-start;width:100%;" onclick="gotoPage('support',null)">🛟 &nbsp;Get Support</button>
+                        <button class="btn btn-ghost" style="justify-content:flex-start;width:100%;" onclick="gotoPage('docs',null)">📖 &nbsp;Documentation</button>
+                        <a href="https://t.me/phistar1" target="_blank" class="btn btn-ghost" style="justify-content:flex-start;width:100%;">✈️ &nbsp;Contact Admin (@phistar1)</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ MY BOTS ══ -->
+        <div class="page" id="page-bots">
+            <div class="page-head-row">
+                <div class="page-head" style="margin-bottom:0;">
+                    <h2>My Bots</h2>
+                    <p>Manage all your deployed WhatsApp bots</p>
+                </div>
+                <button class="btn btn-primary" onclick="gotoPage('deploy',null)">+ Deploy Bot</button>
+            </div>
+            <div class="bot-grid" id="botGrid"></div>
+        </div>
+
+        <!-- ══ DEPLOY ══ -->
+        <div class="page" id="page-deploy">
+            <div class="page-head">
+                <h2>Deploy Bot</h2>
+                <p>Select a slot, configure and go live instantly</p>
+            </div>
+
+            <div class="slot-tabs" id="slotTabs">
+                <div class="slot-tab active" onclick="selectSlot(0,this)"><div class="tab-dot" id="td0"></div>Slot 1</div>
+                <div class="slot-tab" onclick="selectSlot(1,this)"><div class="tab-dot" id="td1"></div>Slot 2</div>
+                <div class="slot-tab" onclick="selectSlot(2,this)"><div class="tab-dot" id="td2"></div>Slot 3</div>
+            </div>
+
+            <div class="deploy-layout">
+
+                <div class="card">
+                    <div class="card-title"><span class="icon">🛠</span> Configuration — <span id="slotLbl">Slot 1</span></div>
+
+                    <div class="field">
+                        <label>Bot Name (optional)</label>
+                        <input type="text" id="botName" placeholder="e.g. My Main Bot">
+                    </div>
+
+                    <div class="field">
+                        <label>WhatsApp Number (with country code, no +)</label>
+                        <input type="tel" id="phoneNum" placeholder="e.g. 2348012345678">
+                    </div>
+
+                    <div class="field">
+                        <label>Command Prefix</label>
+                        <div class="prefix-row">
+                            <div class="prefix-opt"><input type="radio" name="pfx" id="pfx1" value="." checked><label for="pfx1">.</label></div>
+                            <div class="prefix-opt"><input type="radio" name="pfx" id="pfx2" value="/"><label for="pfx2">/</label></div>
+                            <div class="prefix-opt"><input type="radio" name="pfx" id="pfx3" value="!"><label for="pfx3">!</label></div>
+                            <div class="prefix-opt"><input type="radio" name="pfx" id="pfx4" value="'"><label for="pfx4">'</label></div>
+                            <div class="prefix-opt"><input type="radio" name="pfx" id="pfx5" value="#"><label for="pfx5">#</label></div>
+                        </div>
+                    </div>
+
+                    <div class="pairing-box" id="pairingBox">
+                        <div class="pairing-label">PAIRING CODE</div>
+                        <div class="pairing-code" id="pairingCodeVal">——————</div>
+                        <ul class="pairing-steps">
+                            <li>Open WhatsApp on your phone</li>
+                            <li>Go to Settings → Linked Devices</li>
+                            <li>Tap "Link a Device" and enter the code</li>
+                        </ul>
+                        <button class="btn btn-ghost btn-sm" style="margin-top:0.75rem;" onclick="copyCode()">📋 Copy Code</button>
+                    </div>
+
+                    <div style="display:flex;gap:0.5rem;margin-top:1rem;flex-wrap:wrap;">
+                        <button class="btn btn-primary" id="startBtn" onclick="startDeploy()">▶ &nbsp;Start Deployment</button>
+                        <button class="btn btn-danger" id="stopBtn" style="display:none;" onclick="stopDeploy()">⏹ &nbsp;Stop</button>
+                        <button class="btn btn-ghost" id="restartBtn" style="display:none;" onclick="restartDeploy()">↺ &nbsp;Restart</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title"><span class="icon">📊</span> Live Status</div>
+                    <div class="deploy-status-card">
+                        <div class="status-row">
+                            <div class="sr-label">Connection</div>
+                            <div class="sr-value" id="stConnection">Offline</div>
+                        </div>
+                        <div class="status-row">
+                            <div class="sr-label">Uptime</div>
+                            <div class="sr-value" id="stUptime" style="font-family:'Courier New',monospace;font-size:0.875rem;">00:00:00</div>
+                        </div>
+                        <div class="status-row">
+                            <div class="sr-label">Prefix</div>
+                            <div class="sr-value" id="stPrefix" style="font-family:'Courier New',monospace;color:var(--red);">.</div>
+                        </div>
+                        <div class="status-row">
+                            <div class="sr-label">Slot</div>
+                            <div class="sr-value" id="stSlot">Slot 1</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Console -->
+            <div class="console-wrap">
+                <div class="console-titlebar">
+                    <div class="tc-dot r"></div>
+                    <div class="tc-dot y"></div>
+                    <div class="tc-dot g"></div>
+                    <span class="console-label" id="consoleLabel">bigdaddy-v3 — slot-1 — bash</span>
+                    <button class="btn btn-ghost btn-sm" onclick="clearConsole()">Clear</button>
+                </div>
+                <div class="console-out" id="consoleOut">
+                    <span class="cl default"><span class="ts">[00:00:00]</span><span class="msg">▶  BIG DADDY V3 Deployment Console ready</span></span>
+                    <span class="cl info"><span class="ts">[00:00:00]</span><span class="msg">Select a slot, enter your number and press Start</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ COMMUNITY ══ -->
+        <div class="page" id="page-community">
+            <div class="page-head">
+                <h2>Community Chat</h2>
+                <p>Talk with other BIG DADDY V3 users in real time</p>
+            </div>
+
+            <div class="community-layout">
+
+                <div class="chat-panel">
+                    <div class="chat-top">
+                        <div class="chat-channel-icon">#</div>
+                        <div>
+                            <div class="chat-channel-name">#general</div>
+                            <div class="chat-channel-sub" id="chatOnlineLabel">24 online</div>
+                        </div>
+                    </div>
+                    <div class="chat-body" id="chatBody">
+                        <div class="sys-msg">Welcome to BIG DADDY V3 Community — be respectful 🤝</div>
+                    </div>
+                    <div class="chat-input-row">
+                        <textarea class="chat-input" id="chatInput" rows="1" placeholder="Message #general…"></textarea>
+                        <button class="chat-send" onclick="sendMsg()">➤</button>
+                    </div>
+                </div>
+
+                <div class="community-aside">
+                    <div class="card">
+                        <div class="card-title"><span class="icon" style="color:var(--green);font-size:0.6rem;">●</span> Online — <span id="onlineCount">0</span></div>
+                        <div class="member-list" id="memberList"></div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title"><span class="icon">📣</span> Announcements</div>
+                        <div class="announce-item">
+                            <div class="announce-title">🔥 V3 Multi-Bot Live</div>
+                            <div class="announce-body">Deploy up to 3 bots at once. Each slot is fully independent.</div>
+                            <div class="announce-time">Today</div>
+                        </div>
+                        <div class="announce-item" style="margin-top:0.5rem;">
+                            <div class="announce-title">📌 Community Rules</div>
+                            <div class="announce-body">Be respectful, no spam. Help each other — we're all here to build.</div>
+                            <div class="announce-time">Pinned</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ══ SUPPORT ══ -->
+        <div class="page" id="page-support">
+            <div class="page-head">
+                <h2>Support Center</h2>
+                <p>Get help from our team or submit a ticket</p>
+            </div>
+
+            <div class="support-layout">
+
+                <div>
+                    <div class="card" style="margin-bottom:1rem;">
+                        <div class="card-title"><span class="icon">🎫</span> My Tickets</div>
+                        <div id="ticketList">
+                            <div style="text-align:center;padding:2rem;color:var(--text-3);font-size:0.875rem;">
+                                No tickets yet. Submit one below.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title"><span class="icon">✏️</span> New Ticket</div>
+                        <div class="field">
+                            <label>Subject</label>
+                            <input type="text" id="tSubject" placeholder="Brief description of your issue">
+                        </div>
+                        <div class="field">
+                            <label>Category</label>
+                            <select id="tCat">
+                                <option value="deployment">Deployment Issue</option>
+                                <option value="connection">Connection Problem</option>
+                                <option value="account">Account</option>
+                                <option value="billing">Billing / Premium</option>
+                                <option value="bug">Bug Report</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="field">
+                            <label>Description</label>
+                            <textarea id="tBody" placeholder="Describe your issue in detail…"></textarea>
+                        </div>
+                        <button class="btn btn-primary" onclick="submitTicket()">Submit Ticket</button>
+                    </div>
+                </div>
+
+                <div style="display:flex;flex-direction:column;gap:1rem;">
+                    <div class="card">
+                        <div class="card-title"><span class="icon">📞</span> Support Channels</div>
+                        <div class="channel-grid">
+                            <a href="https://t.me/phistar1" target="_blank" class="channel-item">
+                                <div class="ch-icon tg">✈️</div>
+                                <div><div class="ch-name">Telegram</div><div class="ch-sub">@phistar1</div></div>
+                            </a>
+                            <div class="channel-item" onclick="gotoPage('community',null)">
+                                <div class="ch-icon rd">💬</div>
+                                <div><div class="ch-name">Community</div><div class="ch-sub">Live chat</div></div>
+                            </div>
+                            <div class="channel-item" onclick="gotoPage('docs',null)">
+                                <div class="ch-icon gn">📖</div>
+                                <div><div class="ch-name">Docs</div><div class="ch-sub">Read guides</div></div>
+                            </div>
+                            <div class="channel-item">
+                                <div class="ch-icon am">⭐</div>
+                                <div><div class="ch-name">Premium</div><div class="ch-sub">Priority help</div></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-title"><span class="icon">❓</span> Common Issues</div>
+                        <div id="faqItems" style="display:flex;flex-direction:column;gap:0.5rem;"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- ══ DOCS ══ -->
+        <div class="page" id="page-docs">
+            <div class="page-head">
+                <h2>Documentation</h2>
+                <p>Everything you need to deploy and manage your bot</p>
+            </div>
+            <div class="docs-wrap">
+                <div class="docs-section">
+                    <h3><span class="icon">🚀</span> Getting Started</h3>
+                    <p>BIG DADDY V3 supports up to 3 simultaneous WhatsApp bots per account. Each bot has its own slot, console and configuration.</p>
+                    <ol>
+                        <li>Go to <strong>Deploy Bot</strong> and choose a slot (1, 2 or 3)</li>
+                        <li>Enter your WhatsApp number with country code (no spaces, no +)</li>
+                        <li>Select a command prefix and click <strong>Start Deployment</strong></li>
+                        <li>Open WhatsApp → Settings → Linked Devices → Link a Device</li>
+                        <li>Enter the pairing code — your bot will connect automatically</li>
+                    </ol>
+                </div>
+                <div class="docs-section">
+                    <h3><span class="icon">📦</span> Bot Slots</h3>
+                    <p>Each slot is completely independent:</p>
+                    <ul>
+                        <li>Separate phone number and session</li>
+                        <li>Individual prefix and console</li>
+                        <li>Independent uptime monitoring</li>
+                    </ul>
+                </div>
+                <div class="docs-section">
+                    <h3><span class="icon">⌨️</span> Commands</h3>
+                    <div class="code-block">[prefix]help     — Show all commands
+[prefix]menu     — Main menu
+[prefix]sticker  — Create stickers
+[prefix]ai       — AI assistant
+[prefix]play     — Play audio
+[prefix]tts      — Text to speech
+[prefix]uptime   — Check uptime</div>
+                    <p>Replace <code>[prefix]</code> with your chosen prefix (., /, !, ', #)</p>
+                </div>
+                <div class="docs-section">
+                    <h3><span class="icon">🛡</span> Connection Monitoring</h3>
+                    <ul>
+                        <li>Real-time status via server-sent events</li>
+                        <li>Auto-verification every 60 seconds</li>
+                        <li>Background checks continue when browser is closed</li>
+                        <li>Hourly health checks across all active bots</li>
+                    </ul>
+                </div>
+                <div class="docs-section">
+                    <h3><span class="icon">👑</span> Premium</h3>
+                    <ul>
+                        <li>2× faster servers</li>
+                        <li>Exclusive exploits & hacks</li>
+                        <li>24/7 uptime guarantee with auto-restart</li>
+                        <li>Priority support & premium APK</li>
+                    </ul>
+                    <p>Contact <a href="https://t.me/phistar1" target="_blank">@phistar1</a> on Telegram to upgrade.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══ SETTINGS ══ -->
+        <div class="page" id="page-settings">
+            <div class="page-head">
+                <h2>Settings</h2>
+                <p>Manage your account and preferences</p>
+            </div>
+            <div class="grid-2" style="max-width:860px;">
+                <div class="card">
+                    <div class="card-title"><span class="icon">👤</span> Account</div>
+                    <div class="field"><label>Full Name</label><input type="text" id="settingName" placeholder="Your name"></div>
+                    <div class="field"><label>Email</label><input type="email" id="settingEmail" placeholder="you@example.com" readonly></div>
+                    <button class="btn btn-primary btn-sm" style="margin-top:0.25rem;">Save Changes</button>
+                </div>
+                <div class="card">
+                    <div class="card-title"><span class="icon">🔔</span> Notifications</div>
+                    <div class="setting-item">
+                        <div><div class="setting-label">Bot Status Alerts</div><div class="setting-desc">Notify when bot connects / disconnects</div></div>
+                        <div class="toggle on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div>
+                    </div>
+                    <div class="setting-item">
+                        <div><div class="setting-label">Community Messages</div><div class="setting-desc">Badge for new messages</div></div>
+                        <div class="toggle on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div>
+                    </div>
+                    <div class="setting-item">
+                        <div><div class="setting-label">Support Replies</div><div class="setting-desc">Alert when ticket is answered</div></div>
+                        <div class="toggle on" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div>
+                    </div>
+                    <div class="setting-item">
+                        <div><div class="setting-label">System Updates</div><div class="setting-desc">Platform announcements</div></div>
+                        <div class="toggle" onclick="this.classList.toggle('on')"><div class="toggle-knob"></div></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- Notifications panel -->
+<div class="notif-panel" id="notifPanel">
+    <div class="notif-header">
+        <strong>Notifications</strong>
+        <button class="notif-clear-btn" onclick="clearNotifs()">Clear all</button>
+    </div>
+    <div class="notif-scroll" id="notifList">
+        <div class="notif-item unread">
+            <div class="ni-icon s">✓</div>
+            <div><div class="ni-title">Welcome to BIG DADDY V3!</div><div class="ni-body">Your account is active. Deploy your first bot.</div><div class="ni-time">Just now</div></div>
+        </div>
+        <div class="notif-item unread">
+            <div class="ni-icon i">ℹ</div>
+            <div><div class="ni-title">Community is live</div><div class="ni-body">Join #general to meet other users.</div><div class="ni-time">2 min ago</div></div>
+        </div>
+    </div>
+</div>
+
+<!-- Confirm modal -->
+<div class="modal-bg" id="confirmModal">
+    <div class="modal-box">
+        <div class="modal-head">
+            <h3 id="modalTitle">Confirm</h3>
+            <button class="modal-close" onclick="closeModal()">✕</button>
+        </div>
+        <div class="modal-body"><p id="modalMsg"></p></div>
+        <div class="modal-foot">
+            <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+            <button class="btn btn-danger" id="modalOk">Confirm</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════
+const userId = (() => {
+    const s = window.location.pathname.split('/');
+    return s[s.length - 1] || '';
+})();
+
+let user = { firstName: 'User', lastName: '', email: '' };
+
+const slots = [
+    { name:'Bot Slot 1', number:'', prefix:'.', status:'empty', startTime:null, uptime:0, endpoint:null },
+    { name:'Bot Slot 2', number:'', prefix:'.', status:'empty', startTime:null, uptime:0, endpoint:null },
+    { name:'Bot Slot 3', number:'', prefix:'.', status:'empty', startTime:null, uptime:0, endpoint:null }
+];
+
+let activeSlot = 0;
+let modalCb    = null;
+let tickets    = [];
+
+const MEMBERS = [
+    { name:'Admin',      init:'AD', color:'#e8002d' },
+    { name:'PhiStar',    init:'PS', color:'#3b82f6' },
+    { name:'BotUser99',  init:'BU', color:'#10b981' },
+    { name:'WAboss',     init:'WA', color:'#f59e0b' },
+    { name:'DeployKing', init:'DK', color:'#8b5cf6' },
+];
+
+const PAGE_TITLES = {
+    home:'Overview', bots:'My Bots', deploy:'Deploy Bot',
+    community:'Community Chat', support:'Support Center',
+    docs:'Documentation', settings:'Settings'
+};
+
+// ══════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', async () => {
+    loadSlotsFromStorage();
+    await fetchUser();
+    renderBotGrid();
+    renderHomeSlots();
+    renderMembers();
+    seedChat();
+    populateFAQ();
+    updateSlotUsage();
+    updateNavCount();
+    setInterval(tickUptimes, 1000);
+    setInterval(() => {
+        if (document.getElementById('page-community').classList.contains('active')) return;
+        document.getElementById('communityBadge').style.display = '';
+    }, 20000);
+    if (userId) startSSE();
+    if (window.Telegram?.WebApp) { Telegram.WebApp.ready(); Telegram.WebApp.expand(); }
+});
+
+// ══════════════════════════════════════════
+//  USER
+// ══════════════════════════════════════════
+async function fetchUser() {
+    try {
+        const r = await fetch('/api/user/' + userId, { headers: { 'User-Id': userId } });
+        if (r.ok) { const d = await r.json(); if (d.success && d.user) user = d.user; }
+    } catch(_) {}
+    applyUser();
+}
+
+function applyUser() {
+    const fn = user.firstName || 'User';
+    const ln = user.lastName  || '';
+    const init = ((fn[0]||'U') + (ln[0]||'')).toUpperCase();
+    document.getElementById('sidebarAvatar').textContent = init;
+    document.getElementById('sidebarName').textContent   = (fn + ' ' + ln).trim();
+    document.getElementById('homeName').textContent      = fn;
+    document.getElementById('settingName').value         = (fn + ' ' + ln).trim();
+    document.getElementById('settingEmail').value        = user.email || '';
+}
+
+// ══════════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════════
+function gotoPage(name, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+
+    const pg = document.getElementById('page-' + name);
+    if (pg) pg.classList.add('active');
+    if (el) el.classList.add('active');
+    else {
+        // activate correct nav-item
+        document.querySelectorAll('.nav-item').forEach(n => {
+            if (n.getAttribute('onclick') && n.getAttribute('onclick').includes("'" + name + "'")) n.classList.add('active');
+        });
+    }
+
+    document.getElementById('topbarTitle').textContent = PAGE_TITLES[name] || name;
+    closeSidebar();
+
+    if (name === 'community') {
+        document.getElementById('communityBadge').style.display = 'none';
+        setTimeout(() => document.getElementById('chatBody').scrollTop = 9999, 50);
+    }
+    if (name === 'bots') renderBotGrid();
+    if (name === 'home') { renderHomeSlots(); updateHomeStats(); }
+}
+
+// ══════════════════════════════════════════
+//  SIDEBAR
+// ══════════════════════════════════════════
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebarOverlay').classList.toggle('show');
+}
+
+function closeSidebar() {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebarOverlay').classList.remove('show');
+}
+
+// ══════════════════════════════════════════
+//  SLOT SELECTION (DEPLOY PAGE)
+// ══════════════════════════════════════════
+function selectSlot(idx, el) {
+    activeSlot = idx;
+    document.querySelectorAll('.slot-tab').forEach(t => t.classList.remove('active'));
+    if (el) el.classList.add('active');
+
+    const s = slots[idx];
+    document.getElementById('slotLbl').textContent   = 'Slot ' + (idx+1);
+    document.getElementById('consoleLabel').textContent = 'bigdaddy-v3 — slot-' + (idx+1) + ' — bash';
+    document.getElementById('stSlot').textContent    = 'Slot ' + (idx+1);
+    document.getElementById('botName').value         = s.name || '';
+    document.getElementById('phoneNum').value        = s.number || '';
+    document.getElementById('stPrefix').textContent  = s.prefix || '.';
+
+    document.querySelectorAll('[name=pfx]').forEach(r => { if (r.value === (s.prefix||'.')) r.checked = true; });
+
+    syncDeployUI(s.status);
+    log('▶ Switched to Slot ' + (idx+1), 'info');
+    if (s.status === 'running') log('✅ This slot is currently ONLINE', 'success');
+}
+
+function syncDeployUI(status) {
+    document.getElementById('startBtn').style.display   = (status === 'running' || status === 'verifying') ? 'none' : '';
+    document.getElementById('stopBtn').style.display    = (status === 'running' || status === 'verifying') ? '' : 'none';
+    document.getElementById('restartBtn').style.display = (status === 'running') ? '' : 'none';
+
+    const conn = document.getElementById('stConnection');
+    if (status === 'running')    { conn.textContent = '🟢 Online';     conn.style.color = 'var(--green)'; }
+    else if (status === 'verifying') { conn.textContent = '🟡 Verifying'; conn.style.color = 'var(--amber)'; }
+    else                         { conn.textContent = '⚫ Offline';    conn.style.color = 'var(--text-2)'; }
+}
+
+// ══════════════════════════════════════════
+//  DEPLOY
+// ══════════════════════════════════════════
+async function startDeploy() {
+    const phone  = document.getElementById('phoneNum').value.trim().replace(/\D/g,'');
+    const name   = document.getElementById('botName').value.trim() || ('Bot Slot ' + (activeSlot+1));
+    const prefix = document.querySelector('[name=pfx]:checked')?.value || '.';
+
+    if (!phone || phone.length < 7) { log('❌ Enter a valid WhatsApp number', 'error'); return; }
+
+    if (slots.filter(s => s.status !== 'empty').length >= 3) {
+        log('❌ All 3 slots are in use. Stop a bot first.', 'error'); return;
+    }
+
+    const s = slots[activeSlot];
+    s.number = phone; s.prefix = prefix; s.name = name; s.status = 'verifying';
+    saveSlotsToStorage();
+
+    const btn = document.getElementById('startBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner"></div> Deploying…';
+
+    syncDeployUI('verifying');
+    syncTabDot(activeSlot, 'verifying');
+    updateSlotUsage(); updateNavCount();
+
+    log('▶ Initializing Slot ' + (activeSlot+1), 'info');
+    log('📱 Number: +' + phone, 'default');
+    log('⚙️ Prefix: ' + prefix + ' | Name: ' + name, 'default');
+    log('🔄 Requesting endpoint…', 'info');
+
+    try {
+        const ep = await fetch('/api/get-endpoint', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ prefix })
+        });
+        if (!ep.ok) throw new Error('Server error');
+        const epd = await ep.json();
+        if (!epd.success) throw new Error(epd.error || 'Endpoint failed');
+        s.endpoint = epd.endpoint;
+        log('✅ Endpoint allocated', 'success');
+
+        const pr = await fetch(epd.endpoint + '/pair?phoneNumber=' + phone);
+        if (!pr.ok) throw new Error('Pairing service unavailable');
+        const prd = await pr.json();
+        if (!prd.success) throw new Error(prd.error || 'Pairing failed');
+
+        const code = prd.pairingCode;
+        document.getElementById('pairingCodeVal').textContent = code;
+        document.getElementById('pairingBox').classList.add('show');
+        log('🔑 Pairing code: ' + code, 'success');
+        log('📲 Enter this in WhatsApp → Linked Devices', 'info');
+
+        saveSlotsToStorage(); updateNavCount();
+
+        await fetch('/api/start-verification', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ phoneNumber:phone, endpoint:epd.endpoint, userId, prefix, attempts:6 })
+        });
+        log('🔄 Background verification started (6 attempts)', 'info');
+
+    } catch(err) {
+        log('❌ ' + err.message, 'error');
+        s.status = 'empty'; saveSlotsToStorage();
+        syncDeployUI('empty'); syncTabDot(activeSlot, '');
+        updateSlotUsage(); updateNavCount();
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = '▶ &nbsp;Start Deployment';
+    }
+}
+
+function stopDeploy() {
+    openModal('Stop Bot Slot ' + (activeSlot+1) + '?', async () => {
+        const s = slots[activeSlot];
+        log('⏹ Stopping Slot ' + (activeSlot+1) + '…', 'warn');
+        if (s.endpoint && s.number) {
+            try { await fetch(s.endpoint + '/delpair?phoneNumber=' + s.number); log('✅ Disconnected from endpoint', 'success'); }
+            catch(_) { log('⚠️ Could not cleanly disconnect', 'warn'); }
+        }
+        s.status = 'empty'; s.endpoint = null; s.startTime = null;
+        saveSlotsToStorage();
+        document.getElementById('pairingBox').classList.remove('show');
+        syncDeployUI('empty'); syncTabDot(activeSlot, '');
+        updateSlotUsage(); updateNavCount();
+        addNotif('Bot Stopped', 'Slot ' + (activeSlot+1) + ' has been stopped.', 'w');
+        renderBotGrid(); renderHomeSlots(); updateHomeStats();
+        log('✅ Slot ' + (activeSlot+1) + ' is now free', 'success');
+    });
+}
+
+function restartDeploy() { stopDeploy(); setTimeout(startDeploy, 600); }
+
+function copyCode() {
+    const c = document.getElementById('pairingCodeVal').textContent;
+    if (c && c !== '——————') navigator.clipboard.writeText(c).then(() => log('📋 Code copied!', 'success'));
+}
+
+// ══════════════════════════════════════════
+//  SSE
+// ══════════════════════════════════════════
+function startSSE() {
+    if (!window.EventSource) return;
+    const es = new EventSource('/api/status-stream/' + userId);
+    es.onmessage = e => {
+        try {
+            const d = JSON.parse(e.data);
+            const idx = slots.findIndex(s => s.number === d.phoneNumber);
+            if (d.type === 'bot_connected') {
+                const i = idx >= 0 ? idx : activeSlot;
+                slots[i].status = 'running'; slots[i].startTime = Date.now();
+                saveSlotsToStorage();
+                syncTabDot(i, 'on');
+                if (i === activeSlot) syncDeployUI('running');
+                updateNavCount(); updateSlotUsage();
+                addNotif('Bot Online', 'Slot ' + (i+1) + ' is connected.', 's');
+                log('🟢 Slot ' + (i+1) + ' is now ONLINE!', 'success');
+                renderBotGrid(); renderHomeSlots(); updateHomeStats();
+            } else if (d.type === 'bot_disconnected' && idx >= 0) {
+                slots[idx].status = 'empty'; slots[idx].startTime = null;
+                saveSlotsToStorage();
+                syncTabDot(idx, '');
+                if (idx === activeSlot) syncDeployUI('empty');
+                updateNavCount(); updateSlotUsage();
+                log('🔴 Slot ' + (idx+1) + ' disconnected', 'error');
+                renderBotGrid(); updateHomeStats();
+            }
+        } catch(_) {}
+    };
+    es.onerror = () => { es.close(); setTimeout(startSSE, 10000); };
+}
+
+// ══════════════════════════════════════════
+//  CONSOLE
+// ══════════════════════════════════════════
+function log(text, type = 'default') {
+    const out = document.getElementById('consoleOut');
+    if (!out) return;
+    const now = new Date();
+    const ts  = [now.getHours(), now.getMinutes(), now.getSeconds()].map(n => String(n).padStart(2,'0')).join(':');
+    const el  = document.createElement('span');
+    el.className = 'cl ' + type;
+    el.innerHTML = `<span class="ts">[${ts}]</span><span class="msg">${text}</span>`;
+    out.appendChild(el);
+    out.appendChild(document.createElement('br'));
+    out.scrollTop = out.scrollHeight;
+}
+
+function clearConsole() {
+    document.getElementById('consoleOut').innerHTML = '';
+    log('Console cleared', 'info');
+}
+
+// ══════════════════════════════════════════
+//  TAB DOTS / USAGE
+// ══════════════════════════════════════════
+function syncTabDot(idx, state) {
+    const d = document.getElementById('td' + idx);
+    if (!d) return;
+    d.className = 'tab-dot' + (state === 'on' ? ' on' : state === 'verifying' ? ' amber' : '');
+}
+
+function updateSlotUsage() {
+    const used = slots.filter(s => s.status !== 'empty').length;
+    document.getElementById('slotUsageLabel').textContent = used + ' / 3';
+    document.getElementById('slotFill').style.width = (used / 3 * 100) + '%';
+}
+
+function updateNavCount() {
+    const active = slots.filter(s => s.status === 'running').length;
+    document.getElementById('navBotCount').textContent = active;
+    document.getElementById('homeActiveBots').textContent = active;
+}
+
+function updateHomeStats() { updateNavCount(); renderHomeSlots(); }
+
+// ══════════════════════════════════════════
+//  UPTIME
+// ══════════════════════════════════════════
+function tickUptimes() {
+    slots.forEach((s, i) => {
+        if (s.status === 'running' && s.startTime) {
+            s.uptime = Math.floor((Date.now() - s.startTime) / 1000);
+            if (i === activeSlot) document.getElementById('stUptime').textContent = fmtTime(s.uptime);
+        }
+    });
+    const r = slots.find(s => s.status === 'running');
+    document.getElementById('homeUptime').textContent = r ? fmtTime(r.uptime) : '—';
+}
+
+function fmtTime(sec) {
+    return [Math.floor(sec/3600), Math.floor((sec%3600)/60), sec%60].map(n => String(n).padStart(2,'0')).join(':');
+}
+
+// ══════════════════════════════════════════
+//  BOT GRID (MY BOTS PAGE)
+// ══════════════════════════════════════════
+function renderBotGrid() {
+    const g = document.getElementById('botGrid');
+    if (!g) return;
+    g.innerHTML = '';
+
+    slots.forEach((s, idx) => {
+        const el = document.createElement('div');
+        el.className = 'bot-card ' + s.status;
+
+        const pillMap = {
+            running:   '<span class="pill pill-green"><span class="pill-dot pulse"></span>Online</span>',
+            verifying: '<span class="pill pill-amber"><span class="pill-dot"></span>Verifying</span>',
+            empty:     '<span class="pill pill-muted"><span class="pill-dot"></span>Empty</span>'
+        };
+
+        if (s.status === 'empty') {
+            el.innerHTML = `
+                <div class="bot-card-head">
+                    <span class="bot-slot-num">SLOT 0${idx+1}</span>
+                    ${pillMap.empty}
+                </div>
+                <div class="bot-empty">
+                    <div class="bot-empty-icon">🤖</div>
+                    <h4>Slot ${idx+1} Available</h4>
+                    <p>Deploy a WhatsApp bot to this slot</p>
+                    <button class="btn btn-primary btn-sm" onclick="goDeploySlot(${idx})">+ Deploy Here</button>
+                </div>`;
+        } else {
+            el.innerHTML = `
+                <div class="bot-card-head">
+                    <span class="bot-slot-num">SLOT 0${idx+1}</span>
+                    ${pillMap[s.status] || pillMap.empty}
+                </div>
+                <div class="bot-body">
+                    <div class="bot-name">${s.name || 'Bot Slot ' + (idx+1)}</div>
+                    <div class="bot-number">+${s.number}</div>
+                    <div class="bot-metrics">
+                        <div class="bot-metric"><strong>${s.prefix || '.'}</strong><span>Prefix</span></div>
+                        <div class="bot-metric"><strong style="font-size:0.75rem;">${s.status === 'running' ? fmtTime(s.uptime) : '—'}</strong><span>Uptime</span></div>
+                        <div class="bot-metric"><strong>${idx+1}</strong><span>Slot</span></div>
+                    </div>
+                    <div class="bot-actions">
+                        <button class="btn btn-ghost btn-sm" onclick="goDeploySlot(${idx})">📟 Console</button>
+                        ${s.status === 'running' ? `<button class="btn btn-danger btn-sm" onclick="quickStop(${idx})">⏹ Stop</button>` : ''}
+                    </div>
+                </div>`;
+        }
+        g.appendChild(el);
+    });
+}
+
+function renderHomeSlots() {
+    const el = document.getElementById('homeSlotList');
+    if (!el) return;
+    el.innerHTML = '';
+    const statusColor = { running:'var(--green)', verifying:'var(--amber)', empty:'var(--text-3)' };
+    const statusText  = { running:'Online', verifying:'Verifying…', empty:'Empty' };
+    slots.forEach((s, idx) => {
+        const row = document.createElement('div');
+        row.style.cssText = 'display:flex;align-items:center;gap:0.625rem;padding:0.5rem 0.625rem;background:var(--surface-2);border-radius:0.5rem;cursor:pointer;border:1px solid var(--border);';
+        row.onclick = () => goDeploySlot(idx);
+        row.innerHTML = `
+            <div style="width:7px;height:7px;border-radius:50%;background:${statusColor[s.status]};flex-shrink:0;${s.status==='running'?'box-shadow:0 0 5px var(--green)':''}"></div>
+            <span style="font-size:0.8125rem;font-weight:600;flex:1;">Slot ${idx+1}${s.number ? ' — +'+s.number : ''}</span>
+            <span style="font-size:0.6875rem;color:var(--text-2);">${statusText[s.status]}</span>`;
+        el.appendChild(row);
+    });
+}
+
+function goDeploySlot(idx) {
+    gotoPage('deploy', null);
+    const tabs = document.querySelectorAll('.slot-tab');
+    selectSlot(idx, tabs[idx] || null);
+}
+
+function quickStop(idx) { activeSlot = idx; stopDeploy(); }
+
+// ══════════════════════════════════════════
+//  STORAGE
+// ══════════════════════════════════════════
+function saveSlotsToStorage() {
+    try { sessionStorage.setItem('bd_' + userId, JSON.stringify(slots.map(s => ({ ...s })))); } catch(_) {}
+}
+
+function loadSlotsFromStorage() {
+    try {
+        const raw = sessionStorage.getItem('bd_' + userId);
+        if (!raw) return;
+        JSON.parse(raw).forEach((d, i) => { if (slots[i]) Object.assign(slots[i], d); });
+    } catch(_) {}
+    slots.forEach((s, i) => syncTabDot(i, s.status === 'running' ? 'on' : s.status === 'verifying' ? 'verifying' : ''));
+}
+
+// ══════════════════════════════════════════
+//  COMMUNITY CHAT
+// ══════════════════════════════════════════
+const SEED = [
+    { user:'Admin',      msg:'🤖 Welcome to BIG DADDY V3 Community!',                                           color:'#e8002d' },
+    { user:'PhiStar',    msg:'Just deployed my bot in 90 seconds. Platform is insane 🔥',                       color:'#3b82f6' },
+    { user:'BotUser99',  msg:'How do I use the AI command? .ai does nothing for me',                            color:'#10b981' },
+    { user:'Admin',      msg:'Make sure your bot shows ONLINE first in the console, then try .ai',              color:'#e8002d' },
+    { user:'WAboss',     msg:'Running 2 bots simultaneously right now, works perfectly',                        color:'#f59e0b' },
+    { user:'DeployKing', msg:'Premium is 100% worth it. Auto-restart saved me multiple times already',          color:'#8b5cf6' },
+];
+
+function seedChat() {
+    const body = document.getElementById('chatBody');
+    SEED.forEach(m => body.appendChild(makeBubble(m.user, m.msg, fmtChatTime(), m.color, false)));
+    body.scrollTop = body.scrollHeight;
+}
+
+function renderMembers() {
+    const cnt = MEMBERS.length + Math.floor(Math.random() * 10) + 16;
+    ['onlineCount','chatOnlineLabel'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = id === 'chatOnlineLabel' ? cnt + ' online' : cnt;
+    });
+    document.getElementById('homeOnline').textContent = cnt;
+
+    const list = document.getElementById('memberList');
+    if (!list) return;
+    MEMBERS.forEach(m => {
+        const row = document.createElement('div');
+        row.className = 'member-row';
+        row.innerHTML = `
+            <div class="member-av" style="background:${m.color};">${m.init}</div>
+            <span class="member-name">${m.name}</span>
+            <span class="member-badge">● online</span>`;
+        list.appendChild(row);
+    });
+}
+
+function makeBubble(user, text, time, color, isOwn) {
+    const wrap = document.createElement('div');
+    wrap.className = 'msg-row' + (isOwn ? ' own' : '');
+    const av  = `<div class="msg-av" style="background:${color};">${user.substring(0,2).toUpperCase()}</div>`;
+    const bubble = `<div class="msg-bubble">
+        ${!isOwn ? `<div class="msg-author" style="color:${color};">${user}</div>` : ''}
+        <div class="msg-text">${text}</div>
+        <div class="msg-time">${time}</div>
+    </div>`;
+    wrap.innerHTML = isOwn ? bubble + av : av + bubble;
+    return wrap;
+}
+
+function fmtChatTime() {
+    return new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
+}
+
+async function sendMsg() {
+    const inp = document.getElementById('chatInput');
+    const txt = inp.value.trim();
+    if (!txt) return;
+    inp.value = '';
+
+    const body = document.getElementById('chatBody');
+    body.appendChild(makeBubble(user.firstName || 'You', txt, fmtChatTime(), '#e8002d', true));
+    body.scrollTop = body.scrollHeight;
+
+    try {
+        await fetch('/api/community/send', {
+            method:'POST', headers:{'Content-Type':'application/json','User-Id':userId},
+            body: JSON.stringify({ message:txt, userId, userName: user.firstName || 'User' })
+        });
+    } catch(_) {}
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const ci = document.getElementById('chatInput');
+    if (ci) ci.addEventListener('keypress', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); } });
+});
+
+// ══════════════════════════════════════════
+//  SUPPORT TICKETS
+// ══════════════════════════════════════════
+function submitTicket() {
+    const subj = document.getElementById('tSubject').value.trim();
+    const body = document.getElementById('tBody').value.trim();
+    if (!subj || !body) { alert('Please fill in all fields.'); return; }
+
+    const t = {
+        id: 'TKT-' + Math.random().toString(36).substr(2,5).toUpperCase(),
+        subject: subj, body, status: 'open', time: new Date().toLocaleString()
+    };
+    tickets.unshift(t);
+    document.getElementById('tSubject').value = '';
+    document.getElementById('tBody').value = '';
+    renderTickets();
+    addNotif('Ticket Created', t.id + ' submitted.', 'i');
+}
+
+function renderTickets() {
+    const el = document.getElementById('ticketList');
+    if (!el) return;
+    if (!tickets.length) {
+        el.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-3);font-size:0.875rem;">No tickets yet.</div>';
+        return;
+    }
+    const pillCls = { open:'pill-green', pending:'pill-amber', closed:'pill-muted' };
+    el.innerHTML = tickets.map(t => `
+        <div class="ticket-item ${t.status}">
+            <div class="ticket-row">
+                <span class="ticket-id">${t.id}</span>
+                <span class="pill ${pillCls[t.status]||'pill-muted'}">${t.status.toUpperCase()}</span>
+            </div>
+            <div class="ticket-subj">${t.subject}</div>
+            <div class="ticket-prev">${t.body}</div>
+            <div class="ticket-time">${t.time}</div>
+        </div>`).join('');
+}
+
+function populateFAQ() {
+    const faqs = [
+        { q:'Pairing code not working?', a:'Go to WhatsApp → Settings → Linked Devices → Link a Device and enter the code.' },
+        { q:'Stuck on Verifying?', a:'Wait up to 2 minutes. If still stuck, use Restart in the console.' },
+        { q:'How to run multiple bots?', a:'Use different slots — each supports one WhatsApp number.' },
+        { q:'Commands not responding?', a:'Confirm bot status shows Online (green), then try [prefix]help.' },
+    ];
+    const el = document.getElementById('faqItems');
+    if (!el) return;
+    el.innerHTML = faqs.map(f => `
+        <div style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-md);padding:0.75rem;cursor:pointer;"
+             onclick="this.querySelector('.fa').style.display=this.querySelector('.fa').style.display==='block'?'none':'block'">
+            <div style="font-size:0.875rem;font-weight:600;">${f.q}</div>
+            <div class="fa" style="display:none;font-size:0.8125rem;color:var(--text-2);margin-top:0.375rem;line-height:1.5;">${f.a}</div>
+        </div>`).join('');
+}
+
+// ══════════════════════════════════════════
+//  NOTIFICATIONS
+// ══════════════════════════════════════════
+function toggleNotifPanel() {
+    document.getElementById('notifPanel').classList.toggle('show');
+}
+
+function clearNotifs() {
+    document.getElementById('notifList').innerHTML = '<div style="padding:1.25rem;text-align:center;font-size:0.875rem;color:var(--text-2);">No notifications</div>';
+    document.getElementById('notifPip').style.display = 'none';
+    document.getElementById('notifPanel').classList.remove('show');
+}
+
+function addNotif(title, body, type = 'i') {
+    const icons = { s:'✓', e:'✕', i:'ℹ', w:'⚠' };
+    const item = document.createElement('div');
+    item.className = 'notif-item unread';
+    item.innerHTML = `<div class="ni-icon ${type}">${icons[type]||'ℹ'}</div>
+        <div><div class="ni-title">${title}</div><div class="ni-body">${body}</div><div class="ni-time">Just now</div></div>`;
+    document.getElementById('notifList').insertBefore(item, document.getElementById('notifList').firstChild);
+    document.getElementById('notifPip').style.display = '';
+}
+
+document.addEventListener('click', e => {
+    const p = document.getElementById('notifPanel');
+    const b = document.getElementById('notifToggle');
+    if (p.classList.contains('show') && !p.contains(e.target) && !b.contains(e.target)) p.classList.remove('show');
+});
+
+// ══════════════════════════════════════════
+//  MODAL
+// ══════════════════════════════════════════
+function openModal(msg, cb) {
+    document.getElementById('modalMsg').textContent = msg;
+    document.getElementById('confirmModal').classList.add('show');
+    modalCb = cb;
+    document.getElementById('modalOk').onclick = () => { closeModal(); if (modalCb) modalCb(); };
+}
+
+function closeModal() {
+    document.getElementById('confirmModal').classList.remove('show');
+    modalCb = null;
+}
+
+// ══════════════════════════════════════════
+//  LOGOUT
+// ══════════════════════════════════════════
+function doLogout() {
+    openModal('Sign out of BIG DADDY V3?', () => {
+        fetch('/api/logout', { method:'POST', headers:{'User-Id':userId} }).catch(_=>{}).finally(() => {
+            sessionStorage.clear();
+            if (window.Telegram?.WebApp) Telegram.WebApp.close();
+            else location.href = '/';
+        });
+    });
+}
+</script>
+</body>
+</html>
