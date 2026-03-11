@@ -1,0 +1,1501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>BIG DADDY V4</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080b12;--s1:#0d1017;--s2:#111620;--s3:#161c28;--s4:#1c2333;
+  --b1:rgba(255,255,255,.05);--b2:rgba(255,255,255,.08);--b3:rgba(255,255,255,.12);
+  --t1:#e4e8f5;--t2:#8590aa;--t3:#3e4761;
+  --red:#ff2847;--red2:#d42040;--rg:rgba(255,40,71,.14);--rr:rgba(255,40,71,.1);
+  --green:#00e09b;--amber:#ffb020;--blue:#4f9fff;
+  --rrr:.5rem;--rm:.75rem;--rl:1rem;--rxl:1.25rem;--rxxl:1.5rem;
+  --sb:260px;--tb:54px;--bnh:62px;
+  --fd:'Syne',sans-serif;--fb:'DM Sans',sans-serif;--fm:'DM Mono',monospace;
+}
+html,body{height:100%;overflow:hidden;background:var(--bg);font-family:var(--fb);color:var(--t1);-webkit-font-smoothing:antialiased}
+body{display:flex}
+::-webkit-scrollbar{width:3px;height:3px}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.08);border-radius:3px}
+a{color:inherit;text-decoration:none}
+
+/* ── SIDEBAR ── */
+.sb{width:var(--sb);flex-shrink:0;height:100vh;background:var(--s1);border-right:1px solid var(--b1);display:flex;flex-direction:column;position:relative;z-index:30;transition:transform .28s cubic-bezier(.4,0,.2,1)}
+.sb-brand{padding:1.25rem 1.25rem .875rem;border-bottom:1px solid var(--b1);flex-shrink:0}
+.sb-logo{font-family:var(--fd);font-weight:800;font-size:1.0625rem;letter-spacing:-.5px;display:flex;align-items:center;gap:.375rem}
+.sb-logo-v{color:var(--red);position:relative}
+.sb-logo-v::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:1.5px;background:var(--red);border-radius:2px;opacity:.7}
+.sb-badge{font-size:.5rem;letter-spacing:.12em;font-weight:700;color:var(--t3);text-transform:uppercase;margin-top:.2rem;font-family:var(--fd)}
+
+.sb-user{display:flex;align-items:center;gap:.625rem;padding:.875rem 1.25rem;border-bottom:1px solid var(--b1);flex-shrink:0}
+.u-av{width:2.125rem;height:2.125rem;border-radius:.5625rem;background:linear-gradient(135deg,var(--red),#ff7340);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-weight:800;font-size:.75rem;color:#fff;flex-shrink:0;box-shadow:0 2px 12px rgba(255,40,71,.3)}
+.u-info{min-width:0;flex:1}
+.u-name{font-size:.8125rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:var(--fd)}
+.u-status{display:flex;align-items:center;gap:.3rem;font-size:.625rem;color:var(--green);font-weight:600;margin-top:.1rem}
+.u-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:blink 2s ease infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
+.sb-scroll{flex:1;overflow-y:auto;padding:.625rem 0}
+.nav-sec{padding:.75rem 1.25rem .25rem;font-size:.5rem;font-weight:800;letter-spacing:.15em;color:var(--t3);text-transform:uppercase;font-family:var(--fd)}
+.nav-item{display:flex;align-items:center;gap:.5625rem;padding:.4375rem .875rem;margin:.0625rem .5rem;border-radius:var(--rm);color:var(--t2);font-size:.8125rem;font-weight:500;cursor:pointer;transition:all .15s ease;border:1px solid transparent;user-select:none;position:relative}
+.nav-item .nicon{width:1.5rem;height:1.5rem;border-radius:.375rem;display:flex;align-items:center;justify-content:center;font-size:.75rem;background:rgba(255,255,255,.03);flex-shrink:0;transition:all .15s ease}
+.nav-item:hover{color:var(--t1);background:rgba(255,255,255,.03)}
+.nav-item.active{color:var(--t1);background:var(--rg);border-color:rgba(255,40,71,.18);font-weight:600}
+.nav-item.active .nicon{background:var(--red);box-shadow:0 2px 10px rgba(255,40,71,.4)}
+
+/* Bot names in sidebar */
+.bot-entry{display:flex;align-items:center;gap:.5625rem;padding:.4rem .875rem;margin:.0625rem .5rem;border-radius:var(--rm);cursor:pointer;transition:all .15s ease;border:1px solid transparent}
+.bot-entry:hover{background:rgba(255,255,255,.03);color:var(--t1)}
+.bot-entry.active{background:var(--rg);border-color:rgba(255,40,71,.18);color:var(--t1)}
+.be-indicator{width:6px;height:6px;border-radius:50%;flex-shrink:0;background:var(--t3);transition:all .2s ease}
+.be-indicator.on{background:var(--green);box-shadow:0 0 5px var(--green);animation:blink 2s ease infinite}
+.be-indicator.verifying{background:var(--amber)}
+.be-names{flex:1;min-width:0}
+.be-name{font-size:.8rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:var(--fd)}
+.be-num{font-size:.6875rem;color:var(--t3);font-family:var(--fm)}
+
+.sb-foot{padding:.875rem 1rem;border-top:1px solid var(--b1);flex-shrink:0}
+.usage-meta{display:flex;justify-content:space-between;font-size:.75rem;color:var(--t2);margin-bottom:.35rem}
+.usage-track{height:2px;background:var(--b2);border-radius:2px;margin-bottom:.75rem;overflow:hidden}
+.usage-track-fill{height:100%;background:linear-gradient(90deg,var(--red),#ff7340);border-radius:2px;transition:width .4s ease}
+.logout-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:.375rem;padding:.5rem;background:none;border:1px solid var(--b2);border-radius:var(--rm);color:var(--t2);font-size:.8125rem;font-family:var(--fb);cursor:pointer;transition:all .15s ease}
+.logout-btn:hover{border-color:rgba(255,40,71,.25);color:var(--red)}
+
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:25;backdrop-filter:blur(3px)}
+
+/* ── MAIN ── */
+.main{flex:1;display:flex;flex-direction:column;height:100vh;overflow:hidden;min-width:0;position:relative;z-index:1}
+.topbar{display:flex;align-items:center;height:var(--tb);padding:0 1.25rem;gap:.75rem;border-bottom:1px solid var(--b1);background:rgba(8,11,18,.85);backdrop-filter:blur(12px);flex-shrink:0;position:sticky;top:0;z-index:20}
+.topbar-title{font-family:var(--fd);font-size:.9rem;font-weight:700;letter-spacing:-.2px}
+.topbar-spacer{flex:1}
+.tb-icon{width:1.875rem;height:1.875rem;border-radius:var(--rm);background:var(--s2);border:1px solid var(--b1);display:flex;align-items:center;justify-content:center;font-size:.875rem;cursor:pointer;transition:all .15s ease;position:relative;color:var(--t2)}
+.tb-icon:hover{border-color:rgba(255,40,71,.25);color:var(--red)}
+.notif-pip{position:absolute;top:3px;right:3px;width:5px;height:5px;background:var(--red);border-radius:50%;border:1.5px solid var(--s1)}
+.hamburger{display:none!important}
+
+.content{flex:1;overflow-y:auto;padding:1.375rem}
+
+/* ── PAGES ── */
+.page{display:none}
+.page.active{display:block;animation:fadeUp .2s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.ph{margin-bottom:1.25rem}
+.ph h2{font-family:var(--fd);font-size:1.25rem;font-weight:800;letter-spacing:-.4px}
+.ph p{font-size:.8rem;color:var(--t2);margin-top:.2rem}
+.ph-row{display:flex;align-items:flex-start;justify-content:space-between;gap:.875rem;flex-wrap:wrap;margin-bottom:1.25rem}
+
+/* ── CARDS ── */
+.card{background:var(--s2);border:1px solid var(--b1);border-radius:var(--rxl);padding:1.125rem}
+.card-title{font-family:var(--fd);font-size:.8125rem;font-weight:700;color:var(--t1);margin-bottom:.875rem;display:flex;align-items:center;gap:.4rem}
+
+/* ── GRIDS ── */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:.875rem}
+
+/* ── STAT TILES ── */
+.stat{background:var(--s3);border:1px solid var(--b1);border-radius:var(--rl);padding:.875rem 1rem;display:flex;align-items:center;gap:.75rem;transition:border-color .2s}
+.stat:hover{border-color:var(--b2)}
+.stat-ico{width:2.25rem;height:2.25rem;border-radius:.5625rem;background:var(--rg);border:1px solid rgba(255,40,71,.12);display:flex;align-items:center;justify-content:center;font-size:.8125rem;flex-shrink:0}
+.stat-val{font-family:var(--fd);font-size:1.375rem;font-weight:800;line-height:1;letter-spacing:-.4px}
+.stat-lbl{font-size:.625rem;color:var(--t2);margin-top:.15rem;letter-spacing:.05em;text-transform:uppercase;font-weight:700}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.3rem;padding:.5rem .9375rem;border-radius:var(--rm);font-size:.8125rem;font-weight:600;font-family:var(--fb);border:none;cursor:pointer;transition:all .15s ease;white-space:nowrap;letter-spacing:.01em}
+.btn-primary{background:var(--red);color:#fff}
+.btn-primary:hover:not(:disabled){background:var(--red2);box-shadow:0 4px 18px rgba(255,40,71,.35);transform:translateY(-1px)}
+.btn-ghost{background:none;border:1px solid var(--b2);color:var(--t2)}
+.btn-ghost:hover{border-color:var(--b3);color:var(--t1)}
+.btn-danger{background:var(--rg);border:1px solid rgba(255,40,71,.18);color:var(--red)}
+.btn-danger:hover{background:var(--rr)}
+.btn-sm{padding:.3125rem .6875rem;font-size:.75rem}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+.spinner{width:12px;height:12px;border:2px solid rgba(255,255,255,.15);border-top-color:currentColor;border-radius:50%;animation:spin .6s linear infinite;display:inline-block}
+
+/* ── PILLS ── */
+.pill{display:inline-flex;align-items:center;gap:.275rem;font-size:.5875rem;font-weight:800;padding:.15rem .4375rem;border-radius:999px;letter-spacing:.06em;text-transform:uppercase}
+.pill-green{background:rgba(0,224,155,.1);color:var(--green);border:1px solid rgba(0,224,155,.2)}
+.pill-red{background:var(--rg);color:var(--red);border:1px solid rgba(255,40,71,.2)}
+.pill-amber{background:rgba(255,176,32,.1);color:var(--amber);border:1px solid rgba(255,176,32,.2)}
+.pill-muted{background:rgba(255,255,255,.04);color:var(--t2);border:1px solid var(--b1)}
+.pd{width:5px;height:5px;border-radius:50%;background:currentColor}
+.pd.pulse{animation:blink 1.5s ease infinite}
+
+/* ── WELCOME HERO ── */
+.hero{background:linear-gradient(120deg,rgba(255,40,71,.11) 0%,rgba(255,40,71,.04) 55%,transparent);border:1px solid rgba(255,40,71,.14);border-radius:var(--rxxl);padding:1.375rem 1.5rem;margin-bottom:1.125rem;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;top:-50px;right:-30px;width:140px;height:140px;background:radial-gradient(circle,rgba(255,40,71,.1),transparent 70%);pointer-events:none}
+.hero h3{font-family:var(--fd);font-size:1.1875rem;font-weight:800;letter-spacing:-.35px}
+.hero h3 span{color:var(--red)}
+.hero p{font-size:.8rem;color:var(--t2);margin-top:.175rem}
+.hero-actions{display:flex;gap:.5rem;margin-top:.875rem;flex-wrap:wrap}
+
+/* ── BOT CARDS (home) ── */
+.bot-cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:.875rem}
+.bc{background:var(--s2);border:1px solid var(--b1);border-radius:var(--rxl);overflow:hidden;cursor:pointer;transition:all .2s ease;position:relative}
+.bc::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(255,40,71,.5),transparent);opacity:0;transition:opacity .2s ease}
+.bc:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(0,0,0,.4);border-color:var(--b2)}
+.bc:hover::before{opacity:1}
+.bc.running{border-color:rgba(0,224,155,.12)}
+.bc.running::before{background:linear-gradient(90deg,transparent,rgba(0,224,155,.5),transparent);opacity:1}
+.bc.verifying{border-color:rgba(255,176,32,.12)}
+.bc.empty{border-style:dashed;cursor:default}
+.bc.empty:hover{transform:none;box-shadow:none;border-color:var(--b1)}
+.bc-head{display:flex;align-items:center;justify-content:space-between;padding:.75rem .875rem;border-bottom:1px solid var(--b1)}
+.bc-avatar{width:2.25rem;height:2.25rem;border-radius:.625rem;background:var(--s3);border:1px solid var(--b1);display:flex;align-items:center;justify-content:center;font-size:1rem;position:relative;flex-shrink:0}
+.bc-avatar.live::after{content:'';position:absolute;bottom:1px;right:1px;width:8px;height:8px;background:var(--green);border-radius:50%;border:2px solid var(--s2);box-shadow:0 0 5px var(--green)}
+.bc-body{padding:.875rem}
+.bc-name{font-family:var(--fd);font-size:.9375rem;font-weight:700;letter-spacing:-.2px;margin-bottom:.1rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bc-phone{font-size:.75rem;color:var(--t2);font-family:var(--fm)}
+.bc-metrics{display:flex;gap:.4rem;margin:.75rem 0}
+.bc-m{flex:1;background:var(--s3);border:1px solid var(--b1);border-radius:var(--rrr);padding:.4375rem .5rem;text-align:center}
+.bc-m strong{display:block;font-family:var(--fm);font-size:.75rem;font-weight:500;color:var(--t1)}
+.bc-m span{font-size:.5rem;color:var(--t3);text-transform:uppercase;letter-spacing:.08em;font-weight:700}
+.bc-actions{display:flex;gap:.375rem}
+.bc-empty-body{padding:1.75rem .875rem;text-align:center}
+.bc-empty-ico{width:2.75rem;height:2.75rem;border-radius:var(--rm);background:var(--s3);border:1px dashed var(--b2);display:flex;align-items:center;justify-content:center;font-size:1.125rem;margin:0 auto .75rem}
+.bc-empty-title{font-family:var(--fd);font-size:.875rem;font-weight:700;color:var(--t2);margin-bottom:.2rem}
+.bc-empty-sub{font-size:.75rem;color:var(--t3);margin-bottom:.875rem}
+
+/* ── BOT FULL PAGE (overlay) ── */
+.bot-page{display:none;position:fixed;inset:0;background:var(--bg);z-index:50;flex-direction:column}
+.bot-page.active{display:flex;animation:fadeUp .18s ease}
+.bp-bar{display:flex;align-items:center;gap:.625rem;height:var(--tb);padding:0 1rem;border-bottom:1px solid var(--b1);background:var(--s1);flex-shrink:0}
+.bp-back{width:1.875rem;height:1.875rem;border-radius:var(--rm);background:var(--s2);border:1px solid var(--b1);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t2);transition:all .15s ease;flex-shrink:0;font-size:1rem}
+.bp-back:hover{border-color:rgba(255,40,71,.25);color:var(--red)}
+.bp-info{flex:1;min-width:0}
+.bp-name{font-family:var(--fd);font-size:.9375rem;font-weight:700;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bp-phone{font-size:.75rem;color:var(--t2);font-family:var(--fm)}
+.bp-scroll{flex:1;overflow-y:auto}
+.bp-tab{display:none;padding:1.25rem}
+.bp-tab.active{display:block;animation:fadeUp .18s ease}
+
+/* Bottom nav */
+.bp-nav{height:var(--bnh);background:var(--s1);border-top:1px solid var(--b1);display:flex;align-items:stretch;flex-shrink:0}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2rem;cursor:pointer;border:none;background:none;color:var(--t3);font-family:var(--fb);padding:.5rem;transition:color .15s ease;position:relative}
+.bn-item.active{color:var(--red)}
+.bn-item.active::before{content:'';position:absolute;top:0;left:15%;right:15%;height:1.5px;background:var(--red);border-radius:0 0 2px 2px}
+.bn-ico{font-size:1.0625rem}
+.bn-lbl{font-size:.5rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-family:var(--fd)}
+
+/* status bar inside bot page */
+.conn-bar{display:flex;align-items:center;gap:.5rem;padding:.6875rem .875rem;border-radius:var(--rl);font-size:.8125rem;font-weight:600;margin-bottom:.875rem;font-family:var(--fd)}
+.conn-bar.online{background:rgba(0,224,155,.07);border:1px solid rgba(0,224,155,.18);color:var(--green)}
+.conn-bar.offline{background:rgba(255,255,255,.03);border:1px solid var(--b1);color:var(--t2)}
+.conn-bar.verifying{background:rgba(255,176,32,.07);border:1px solid rgba(255,176,32,.18);color:var(--amber)}
+.conn-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+.conn-dot.pulse{animation:blink 1.5s ease infinite}
+
+/* Setting rows */
+.sr{display:flex;align-items:center;justify-content:space-between;padding:.75rem 0;border-bottom:1px solid var(--b1)}
+.sr:last-child{border-bottom:none}
+.sr-left{flex:1;padding-right:.875rem;min-width:0}
+.sr-lbl{font-size:.8125rem;font-weight:600;font-family:var(--fd)}
+.sr-desc{font-size:.75rem;color:var(--t2);margin-top:.1rem;line-height:1.4}
+.sr-val{font-size:.75rem;color:var(--red);font-family:var(--fm);margin-top:.1rem}
+.info-row{display:flex;justify-content:space-between;align-items:center;padding:.4375rem 0;border-bottom:1px solid var(--b1)}
+.info-row:last-child{border-bottom:none}
+.ir-key{font-size:.75rem;color:var(--t2)}
+.ir-val{font-size:.8125rem;font-weight:600;font-family:var(--fm)}
+
+/* Toggle */
+.toggle{width:2.25rem;height:1.1875rem;border-radius:999px;background:var(--b2);position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.toggle.on{background:var(--red);box-shadow:0 0 8px rgba(255,40,71,.25)}
+.toggle::after{content:'';position:absolute;top:2px;left:2px;width:.875rem;height:.875rem;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.4);transition:transform .2s}
+.toggle.on::after{transform:translateX(1.0625rem)}
+
+/* ── FIELDS ── */
+.field{margin-bottom:.875rem}
+.field label{display:block;font-size:.6875rem;font-weight:700;color:var(--t2);margin-bottom:.3rem;letter-spacing:.07em;text-transform:uppercase}
+.field input,.field select,.field textarea{width:100%;padding:.5625rem .8125rem;background:var(--s3);border:1.5px solid var(--b1);border-radius:var(--rm);font-size:.875rem;color:var(--t1);font-family:var(--fb);outline:none;transition:all .15s ease;caret-color:var(--red)}
+.field input::placeholder,.field textarea::placeholder{color:var(--t3)}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:rgba(255,40,71,.45);background:rgba(255,40,71,.025);box-shadow:0 0 0 3px rgba(255,40,71,.08)}
+.field textarea{resize:vertical;min-height:85px}
+.field select option{background:var(--s3)}
+
+/* Prefix picker */
+.prefix-row{display:flex;gap:.4375rem;flex-wrap:wrap}
+.pfx-opt input{display:none}
+.pfx-opt label{display:flex;align-items:center;justify-content:center;min-width:2.625rem;height:2.625rem;padding:0 .5rem;border:1.5px solid var(--b1);border-radius:var(--rm);font-size:.9375rem;font-weight:700;font-family:var(--fm);color:var(--t2);cursor:pointer;transition:all .15s ease;user-select:none}
+.pfx-opt label.word{font-size:.6875rem;font-family:var(--fd);letter-spacing:.05em}
+.pfx-opt input:checked+label{border-color:var(--red);color:var(--red);background:var(--rg);box-shadow:0 0 10px rgba(255,40,71,.15)}
+
+/* Pairing box */
+.pair-box{display:none;background:linear-gradient(135deg,rgba(255,40,71,.1),rgba(255,40,71,.03));border:1px solid rgba(255,40,71,.18);border-radius:var(--rxl);padding:1.375rem;margin-top:.875rem;text-align:center}
+.pair-box.show{display:block;animation:fadeUp .3s ease}
+.pair-lbl{font-size:.5625rem;font-weight:800;letter-spacing:.14em;color:var(--red);text-transform:uppercase;font-family:var(--fd);margin-bottom:.4rem}
+.pair-code{font-size:2rem;font-weight:800;letter-spacing:.3em;font-family:var(--fm);color:var(--t1);text-shadow:0 0 16px rgba(255,40,71,.25);margin-bottom:.75rem}
+.pair-steps{list-style:none;text-align:left;display:inline-block}
+.pair-steps li{font-size:.8rem;color:var(--t2);padding:.175rem 0 .175rem 1.25rem;position:relative;line-height:1.5}
+.pair-steps li::before{content:'→';position:absolute;left:0;color:var(--red);font-weight:700}
+
+/* Deploy 2-col */
+.deploy-cols{display:grid;grid-template-columns:1fr 185px;gap:1rem;margin-bottom:1rem}
+
+/* Console */
+.console{background:#070a10;border:1px solid var(--b1);border-radius:var(--rxl);overflow:hidden}
+.console-hdr{display:flex;align-items:center;gap:.4rem;padding:.5625rem .875rem;border-bottom:1px solid var(--b1);background:rgba(255,255,255,.015)}
+.cdn{width:8px;height:8px;border-radius:50%}.cdn-r{background:#ff5f57}.cdn-y{background:#febc2e}.cdn-g{background:#28c840}
+.c-lbl{font-size:.625rem;color:var(--t3);font-family:var(--fm);flex:1;margin-left:.2rem}
+.c-out{padding:.75rem;height:152px;overflow-y:auto;font-family:var(--fm);font-size:.75rem;display:flex;flex-direction:column;gap:1px}
+.cl{display:flex;gap:.5rem;align-items:baseline;line-height:1.6}
+.cl .ts{color:var(--t3);flex-shrink:0;font-size:.6875rem}
+.cl.success .msg{color:var(--green)}.cl.error .msg{color:#ff6b6b}.cl.warn .msg{color:var(--amber)}.cl.info .msg{color:var(--blue)}.cl.default .msg{color:var(--t2)}
+
+/* ── COMMUNITY ── */
+.chat-wrap{display:grid;grid-template-columns:1fr 200px;gap:.875rem;height:calc(100vh - 10.5rem)}
+.chat-panel{background:var(--s2);border:1px solid var(--b1);border-radius:var(--rxl);display:flex;flex-direction:column;overflow:hidden;min-height:0}
+.chat-top{display:flex;align-items:center;gap:.625rem;padding:.75rem .875rem;border-bottom:1px solid var(--b1);flex-shrink:0}
+.chat-hash{width:1.75rem;height:1.75rem;border-radius:var(--rrr);background:var(--rg);border:1px solid rgba(255,40,71,.15);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:800;color:var(--red);font-family:var(--fd)}
+.chat-ch{font-size:.875rem;font-weight:700;font-family:var(--fd)}
+.chat-sub{font-size:.6875rem;color:var(--t2)}
+.chat-body{flex:1;overflow-y:auto;padding:.75rem;display:flex;flex-direction:column;gap:.5rem;min-height:0}
+.sys-msg{text-align:center;font-size:.75rem;color:var(--t3);padding:.375rem}
+.chat-input-row{display:flex;gap:.4375rem;padding:.6875rem;border-top:1px solid var(--b1);flex-shrink:0}
+.chat-inp{flex:1;padding:.5625rem .75rem;background:var(--s3);border:1.5px solid var(--b1);border-radius:var(--rm);font-size:.875rem;color:var(--t1);font-family:var(--fb);outline:none;resize:none;transition:all .15s ease;caret-color:var(--red)}
+.chat-inp:focus{border-color:rgba(255,40,71,.35)}
+.send-btn{width:2.125rem;height:2.125rem;border-radius:var(--rm);background:var(--red);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.8125rem;transition:all .15s ease}
+.send-btn:hover{background:var(--red2);box-shadow:0 3px 10px rgba(255,40,71,.3)}
+.msg-row{display:flex;gap:.4375rem;align-items:flex-end}
+.msg-row.own{flex-direction:row-reverse}
+.msg-av{width:1.5rem;height:1.5rem;border-radius:.375rem;display:flex;align-items:center;justify-content:center;font-size:.5rem;font-weight:800;color:#fff;flex-shrink:0;font-family:var(--fd)}
+.msg-bub{background:var(--s3);border:1px solid var(--b1);border-radius:var(--rm) var(--rxl) var(--rxl) var(--rm);padding:.4375rem .6875rem;max-width:74%}
+.msg-row.own .msg-bub{background:var(--rg);border-color:rgba(255,40,71,.12);border-radius:var(--rxl) var(--rm) var(--rm) var(--rxl)}
+.msg-author{font-size:.5875rem;font-weight:700;margin-bottom:.175rem;font-family:var(--fd)}
+.msg-text{font-size:.8125rem;line-height:1.45;word-break:break-word}
+.msg-time{font-size:.5625rem;color:var(--t3);margin-top:.175rem;text-align:right}
+
+.c-aside{display:flex;flex-direction:column;gap:.75rem;overflow-y:auto}
+.member-row{display:flex;align-items:center;gap:.4375rem;padding:.25rem 0}
+.member-av{width:1.5rem;height:1.5rem;border-radius:.375rem;display:flex;align-items:center;justify-content:center;font-size:.5rem;font-weight:800;color:#fff;flex-shrink:0;font-family:var(--fd)}
+.member-name{font-size:.8rem;font-weight:500;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.member-badge{font-size:.5875rem;color:var(--green);font-weight:700}
+
+/* ── SUPPORT ── */
+.t-item{background:var(--s3);border:1px solid var(--b1);border-radius:var(--rl);padding:.8125rem;margin-bottom:.4375rem}
+.ch-grid{display:grid;grid-template-columns:1fr 1fr;gap:.4375rem}
+.ch-btn{display:flex;align-items:center;gap:.5rem;padding:.5625rem .6875rem;background:var(--s3);border:1px solid var(--b1);border-radius:var(--rl);cursor:pointer;transition:all .15s ease}
+.ch-btn:hover{border-color:rgba(255,40,71,.18)}
+.ch-ico{width:1.75rem;height:1.75rem;border-radius:var(--rrr);display:flex;align-items:center;justify-content:center;font-size:.8125rem;flex-shrink:0}
+
+/* ── NOTIF PANEL ── */
+.notif-panel{position:fixed;top:3.5rem;right:.75rem;width:285px;background:var(--s2);border:1px solid var(--b2);border-radius:var(--rxl);box-shadow:0 16px 48px rgba(0,0,0,.55);z-index:100;display:none}
+.notif-panel.show{display:block;animation:fadeUp .15s ease}
+.notif-hdr{display:flex;align-items:center;justify-content:space-between;padding:.75rem .875rem;border-bottom:1px solid var(--b1)}
+.notif-hdr strong{font-family:var(--fd);font-size:.8125rem}
+.n-clear{font-size:.75rem;color:var(--t2);background:none;border:none;cursor:pointer;font-family:var(--fb);transition:color .15s}
+.n-clear:hover{color:var(--red)}
+.n-scroll{max-height:290px;overflow-y:auto}
+.notif-item{display:flex;gap:.625rem;padding:.75rem .875rem;border-bottom:1px solid var(--b1)}
+.ni-icon{width:1.625rem;height:1.625rem;border-radius:var(--rrr);display:flex;align-items:center;justify-content:center;font-size:.75rem;flex-shrink:0}
+.ni-icon.s{background:rgba(0,224,155,.1);color:var(--green)}.ni-icon.e{background:var(--rg);color:var(--red)}.ni-icon.i{background:rgba(79,159,255,.1);color:var(--blue)}.ni-icon.w{background:rgba(255,176,32,.1);color:var(--amber)}
+.ni-title{font-size:.8125rem;font-weight:700;font-family:var(--fd)}
+.ni-body{font-size:.75rem;color:var(--t2);margin-top:.1rem}
+.ni-time{font-size:.625rem;color:var(--t3);margin-top:.175rem}
+
+/* ── MODAL ── */
+.modal-wrap{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-wrap.show{display:flex}
+.modal{background:var(--s2);border:1px solid var(--b2);border-radius:var(--rxxl);width:90%;max-width:370px;animation:fadeUp .18s ease;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+.modal-head{display:flex;align-items:center;justify-content:space-between;padding:.875rem 1.125rem;border-bottom:1px solid var(--b1)}
+.modal-head h3{font-family:var(--fd);font-size:.9375rem;font-weight:700}
+.modal-x{background:none;border:none;color:var(--t2);cursor:pointer;font-size:1rem;transition:color .15s}
+.modal-x:hover{color:var(--red)}
+.modal-body{padding:1rem 1.125rem}
+.modal-body p{font-size:.875rem;color:var(--t2);line-height:1.5}
+.modal-foot{display:flex;gap:.4375rem;justify-content:flex-end;padding:.75rem 1.125rem;border-top:1px solid var(--b1)}
+
+/* ── HISTORY ── */
+.h-item{display:flex;align-items:center;gap:.75rem;padding:.75rem;background:var(--s3);border:1px solid var(--b1);border-radius:var(--rl);margin-bottom:.4375rem}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1080px){.chat-wrap{grid-template-columns:1fr;height:auto}.c-aside{flex-direction:row;flex-wrap:wrap}}
+@media(max-width:768px){
+  .sb{position:fixed;top:0;left:0;height:100%;transform:translateX(-100%);z-index:35}
+  .sb.open{transform:translateX(0)}
+  .sb-overlay.show{display:block}
+  .hamburger{display:flex!important}
+  .g4{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr 1fr}.g2{grid-template-columns:1fr}
+  .content{padding:1rem}
+  .deploy-cols{grid-template-columns:1fr}
+}
+@media(max-width:480px){.g4{grid-template-columns:1fr 1fr}.g3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- ── SIDEBAR ── -->
+<aside class="sb" id="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">BIG DADDY <span class="sb-logo-v">V4</span></div>
+    <div class="sb-badge">Bot Management Platform</div>
+  </div>
+
+  <div class="sb-user">
+    <div class="u-av" id="sidebarAvatar">BD</div>
+    <div class="u-info">
+      <div class="u-name" id="sidebarName">Loading…</div>
+      <div class="u-status"><span class="u-dot"></span>Active</div>
+    </div>
+  </div>
+
+  <nav class="sb-scroll">
+    <div class="nav-sec">Main</div>
+    <div class="nav-item active" onclick="gotoPage('home',this)"><div class="nicon">⊞</div>Overview</div>
+    <div class="nav-item" onclick="gotoPage('deploy',this)" id="deployNavItem"><div class="nicon">🚀</div>Add Bot</div>
+
+    <div class="nav-sec" style="margin-top:.25rem">My Bots</div>
+    <div id="botNavList">
+      <div style="padding:.375rem 1rem;font-size:.75rem;color:var(--t3)">No bots deployed</div>
+    </div>
+
+    <div class="nav-sec" style="margin-top:.25rem">Community</div>
+    <div class="nav-item" onclick="gotoPage('community',this)"><div class="nicon">💬</div>Chat<span id="communityBadge" style="display:none;margin-left:auto;background:var(--red);color:#fff;font-size:.5rem;padding:.1rem .35rem;border-radius:999px;font-weight:800;letter-spacing:.05em">NEW</span></div>
+    <div class="nav-item" onclick="gotoPage('support',this)"><div class="nicon">🛟</div>Support</div>
+
+    <div class="nav-sec" style="margin-top:.25rem">Account</div>
+    <div class="nav-item" onclick="gotoPage('history',this)"><div class="nicon">📋</div>History</div>
+    <div class="nav-item" onclick="gotoPage('settings',this)"><div class="nicon">⚙️</div>Settings</div>
+  </nav>
+
+  <div class="sb-foot">
+    <div class="usage-meta"><span>Bots Used</span><strong id="slotUsageLabel" style="color:var(--t1)">0 / 3</strong></div>
+    <div class="usage-track"><div class="usage-track-fill" id="slotFill" style="width:0%"></div></div>
+    <button class="logout-btn" onclick="doLogout()">⎋ &nbsp; Sign Out</button>
+  </div>
+</aside>
+
+<div class="sb-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- ── MAIN ── -->
+<div class="main">
+  <div class="topbar">
+    <button class="tb-icon hamburger" id="hamburgerBtn" onclick="toggleSidebar()">☰</button>
+    <span class="topbar-title" id="topbarTitle">Overview</span>
+    <div class="topbar-spacer"></div>
+    <div class="tb-icon" id="notifToggle" onclick="toggleNotifPanel()">
+      🔔<div class="notif-pip" id="notifPip" style="display:none"></div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ██ HOME ██ -->
+    <div class="page active" id="page-home">
+      <div class="hero">
+        <h3>Hey, <span id="homeName">there</span> 👋</h3>
+        <p>Manage your WhatsApp bots. Tap a bot to open its control panel.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" onclick="gotoPage('deploy',null)">+ Add Bot</button>
+          <button class="btn btn-ghost" onclick="fetchUser().then(renderHomeSlotCards)">↺ Refresh</button>
+        </div>
+      </div>
+      <div class="g4" style="margin-bottom:1rem">
+        <div class="stat"><div class="stat-ico">🤖</div><div><div class="stat-val" id="homeActiveBots">0</div><div class="stat-lbl">Active Bots</div></div></div>
+        <div class="stat"><div class="stat-ico">📦</div><div><div class="stat-val">3</div><div class="stat-lbl">Max Slots</div></div></div>
+        <div class="stat"><div class="stat-ico">👥</div><div><div class="stat-val" id="homeOnline">—</div><div class="stat-lbl">Online Now</div></div></div>
+        <div class="stat"><div class="stat-ico">⏱</div><div><div class="stat-val" id="homeUptime">—</div><div class="stat-lbl">Bot Uptime</div></div></div>
+      </div>
+      <div class="bot-cards-grid" id="homeSlotCards"></div>
+    </div>
+
+    <!-- ██ DEPLOY ██ -->
+    <div class="page" id="page-deploy">
+      <div class="ph"><h2>Add Bot</h2><p>Connect a WhatsApp number to the platform</p></div>
+      <div class="deploy-cols">
+        <div class="card">
+          <div class="card-title">⚙️ Configuration</div>
+          <div class="field"><label>Bot Name</label><input type="text" id="botName" placeholder="e.g. My Main Bot"></div>
+          <div class="field"><label>WhatsApp Number</label><input type="tel" id="phoneNum" placeholder="2348012345678 (no +)"></div>
+          <div class="field">
+            <label>Command Prefix</label>
+            <div class="prefix-row">
+              <div class="pfx-opt"><input type="radio" name="pfx" id="pfx0" value="none" checked><label for="pfx0" class="word">none</label></div>
+              <div class="pfx-opt"><input type="radio" name="pfx" id="pfx1" value="."><label for="pfx1">.</label></div>
+              <div class="pfx-opt"><input type="radio" name="pfx" id="pfx2" value="!"><label for="pfx2">!</label></div>
+              <div class="pfx-opt"><input type="radio" name="pfx" id="pfx3" value="/"><label for="pfx3">/</label></div>
+              <div class="pfx-opt"><input type="radio" name="pfx" id="pfx4" value=","><label for="pfx4">,</label></div>
+            </div>
+          </div>
+          <div class="pair-box" id="pairingBox">
+            <div class="pair-lbl">Pairing Code</div>
+            <div class="pair-code" id="pairingCodeVal">——————</div>
+            <ul class="pair-steps">
+              <li>Open WhatsApp on your phone</li>
+              <li>Settings → Linked Devices</li>
+              <li>Link a Device → enter code</li>
+            </ul>
+            <button class="btn btn-ghost btn-sm" style="margin-top:.75rem" onclick="copyCode()">📋 Copy Code</button>
+          </div>
+          <div style="display:flex;gap:.4375rem;margin-top:1rem;flex-wrap:wrap">
+            <button class="btn btn-primary" id="startBtn" onclick="startDeploy()">▶ Connect Bot</button>
+            <button class="btn btn-danger" id="stopBtn" style="display:none" onclick="stopDeploy()">⏹ Stop</button>
+            <button class="btn btn-ghost" id="restartBtn" style="display:none" onclick="restartDeploy()">↺ Restart</button>
+          </div>
+        </div>
+        <div class="card" style="height:fit-content">
+          <div class="card-title">📡 Status</div>
+          <div class="info-row"><div class="ir-key">Connection</div><div class="ir-val" id="stConnection">Offline</div></div>
+          <div class="info-row"><div class="ir-key">Uptime</div><div class="ir-val" id="stUptime" style="font-family:var(--fm)">00:00:00</div></div>
+          <div class="info-row"><div class="ir-key">Prefix</div><div class="ir-val" id="stPrefix" style="color:var(--red)">none</div></div>
+          <div class="info-row"><div class="ir-key">Slot</div><div class="ir-val" id="stSlot">—</div></div>
+        </div>
+      </div>
+      <div class="console">
+        <div class="console-hdr">
+          <div class="cdn cdn-r"></div><div class="cdn cdn-y"></div><div class="cdn cdn-g"></div>
+          <span class="c-lbl" id="consoleLabel">bigdaddy-v4 — terminal</span>
+          <button class="btn btn-ghost btn-sm" onclick="clearConsole()">Clear</button>
+        </div>
+        <div class="c-out" id="consoleOut">
+          <span class="cl default"><span class="ts">[00:00:00]</span><span class="msg"> BIG DADDY V4 — Ready</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ██ COMMUNITY ██ -->
+    <div class="page" id="page-community">
+      <div class="ph"><h2>Community Chat</h2><p>Live chat with BIG DADDY V4 users</p></div>
+      <div class="chat-wrap">
+        <div class="chat-panel">
+          <div class="chat-top">
+            <div class="chat-hash">#</div>
+            <div><div class="chat-ch">#general</div><div class="chat-sub" id="chatOnlineLabel">— online</div></div>
+          </div>
+          <div class="chat-body" id="chatBody">
+            <div class="sys-msg" id="chatLoadingMsg">Loading messages…</div>
+          </div>
+          <div class="chat-input-row">
+            <textarea class="chat-inp" id="chatInput" rows="1" placeholder="Message #general…"></textarea>
+            <button class="send-btn" onclick="sendMsg()">➤</button>
+          </div>
+        </div>
+        <div class="c-aside">
+          <div class="card">
+            <div class="card-title"><span style="color:var(--green);font-size:.6rem">●</span> Online — <span id="onlineCount">0</span></div>
+            <div id="memberList" style="max-height:180px;overflow-y:auto"></div>
+          </div>
+          <div class="card">
+            <div class="card-title">📣 Updates</div>
+            <div style="font-size:.8125rem;padding:.4375rem 0;border-bottom:1px solid var(--b1)"><div style="font-weight:700;font-family:var(--fd)">🔥 V4 Multi-Bot</div><div style="font-size:.75rem;color:var(--t2);margin-top:.1rem">Up to 3 bots per account.</div></div>
+            <div style="font-size:.8125rem;padding:.4375rem 0"><div style="font-weight:700;font-family:var(--fd)">📌 Community Rules</div><div style="font-size:.75rem;color:var(--t2);margin-top:.1rem">Be respectful. Help each other.</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ██ SUPPORT ██ -->
+    <div class="page" id="page-support">
+      <div class="ph"><h2>Support</h2><p>Get help from the team</p></div>
+      <div class="g2">
+        <div>
+          <div class="card" style="margin-bottom:.875rem">
+            <div class="card-title">🎫 My Tickets</div>
+            <div id="ticketList"><div style="text-align:center;padding:2rem;color:var(--t3);font-size:.875rem">No tickets yet.</div></div>
+          </div>
+          <div class="card">
+            <div class="card-title">✏️ New Ticket</div>
+            <div class="field"><label>Subject</label><input type="text" id="tSubject" placeholder="Brief description"></div>
+            <div class="field"><label>Category</label><select id="tCat"><option value="deployment">Deployment</option><option value="connection">Connection</option><option value="account">Account</option><option value="bug">Bug Report</option><option value="other">Other</option></select></div>
+            <div class="field"><label>Description</label><textarea id="tBody" placeholder="Describe your issue…"></textarea></div>
+            <button class="btn btn-primary" onclick="submitTicket()">Submit Ticket</button>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:.875rem">
+          <div class="card">
+            <div class="card-title">📞 Contact</div>
+            <div class="ch-grid">
+              <a href="https://t.me/phistar1" target="_blank" class="ch-btn"><div class="ch-ico" style="background:rgba(79,159,255,.1)">✈️</div><div><div style="font-size:.8rem;font-weight:700;font-family:var(--fd)">Telegram</div><div style="font-size:.6875rem;color:var(--t2)">@phistar1</div></div></a>
+              <div class="ch-btn" onclick="gotoPage('community',null)"><div class="ch-ico" style="background:var(--rg)">💬</div><div><div style="font-size:.8rem;font-weight:700;font-family:var(--fd)">Community</div><div style="font-size:.6875rem;color:var(--t2)">Live chat</div></div></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">❓ FAQ</div>
+            <div id="faqItems" style="display:flex;flex-direction:column;gap:.4375rem"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ██ HISTORY ██ -->
+    <div class="page" id="page-history">
+      <div class="ph-row">
+        <div class="ph" style="margin-bottom:0"><h2>History</h2><p>Deployment log</p></div>
+        <button class="btn btn-ghost btn-sm" onclick="fetchDeployHistory()">↺ Refresh</button>
+      </div>
+      <div class="card" style="margin-top:.875rem"><div id="historyList"><div style="color:var(--t3);font-size:.875rem;padding:.5rem 0">Loading…</div></div></div>
+    </div>
+
+    <!-- ██ SETTINGS ██ -->
+    <div class="page" id="page-settings">
+      <div class="ph"><h2>Settings</h2><p>Account preferences</p></div>
+      <div class="g2" style="max-width:780px">
+        <div class="card">
+          <div class="card-title">👤 Account</div>
+          <div class="field"><label>Full Name</label><input type="text" id="settingName" placeholder="Your name"></div>
+          <div class="field"><label>Email</label><input type="email" id="settingEmail" readonly></div>
+          <button class="btn btn-primary btn-sm">Save Changes</button>
+        </div>
+        <div class="card">
+          <div class="card-title">🔔 Notifications</div>
+          <div class="sr"><div class="sr-left"><div class="sr-lbl">Bot Alerts</div><div class="sr-desc">Online / offline notifications</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+          <div class="sr"><div class="sr-left"><div class="sr-lbl">Community Messages</div><div class="sr-desc">Badge on new messages</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+          <div class="sr" style="border:none"><div class="sr-left"><div class="sr-lbl">Ticket Replies</div><div class="sr-desc">Alert when ticket answered</div></div><div class="toggle on" onclick="this.classList.toggle('on')"></div></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- ████████████████████
+  BOT FULL PAGE
+████████████████████ -->
+<div class="bot-page" id="botPage">
+  <div class="bp-bar">
+    <div class="bp-back" onclick="closeBotPage()">←</div>
+    <div class="bp-info">
+      <div class="bp-name" id="bpName">Bot</div>
+      <div class="bp-phone" id="bpPhone">—</div>
+    </div>
+    <div id="bpPillSlot"></div>
+  </div>
+
+  <div class="bp-scroll">
+
+    <!-- STATUS TAB -->
+    <div class="bp-tab active" id="btab-status">
+      <div class="conn-bar offline" id="bpStatusBar"><div class="conn-dot" id="bpStatusDot"></div><span id="bpStatusText">Checking…</span></div>
+      <div class="card" style="margin-bottom:.875rem">
+        <div class="card-title">📡 Connection</div>
+        <div class="info-row"><div class="ir-key">Status</div><div class="ir-val" id="bpConn">—</div></div>
+        <div class="info-row"><div class="ir-key">Phone</div><div class="ir-val" id="bpConnPhone">—</div></div>
+        <div class="info-row"><div class="ir-key">Prefix</div><div class="ir-val" id="bpPrefix" style="color:var(--red)">—</div></div>
+        <div class="info-row"><div class="ir-key">Mode</div><div class="ir-val" id="bpMode">—</div></div>
+        <div class="info-row"><div class="ir-key">Uptime</div><div class="ir-val" id="bpUptime" style="font-family:var(--fm)">—</div></div>
+      </div>
+      <div style="display:flex;gap:.4375rem;flex-wrap:wrap">
+        <button class="btn btn-ghost btn-sm" onclick="refreshBotStatus()">↺ Refresh</button>
+        <button class="btn btn-danger btn-sm" onclick="stopCurrentBot()">⏹ Stop Bot</button>
+        <button class="btn btn-ghost btn-sm" onclick="restartCurrentBot()">↺ Restart</button>
+      </div>
+    </div>
+
+    <!-- EDIT/SETTINGS TAB -->
+    <div class="bp-tab" id="btab-edit">
+      <div class="card" style="margin-bottom:.875rem">
+        <div class="card-title">🤖 Bot Behaviour</div>
+
+        <div class="sr"><div class="sr-left"><div class="sr-lbl">Auto Status View</div><div class="sr-desc">Auto view WhatsApp statuses</div></div><div class="toggle" id="togAutoStatus" onclick="toggleSetting('autostatusview',this)"></div></div>
+        <div class="sr"><div class="sr-left"><div class="sr-lbl">Auto React</div><div class="sr-desc">Auto react to messages</div></div><div class="toggle" id="togAutoReact" onclick="toggleSetting('autoreact',this)"></div></div>
+        <div class="sr"><div class="sr-left"><div class="sr-lbl">Auto Read</div><div class="sr-desc">Mark messages as read automatically</div></div><div class="toggle" id="togAutoRead" onclick="toggleSetting('autoread',this)"></div></div>
+        <div class="sr"><div class="sr-left"><div class="sr-lbl">Ghost Mode</div><div class="sr-desc">Hide online & read receipts</div></div><div class="toggle" id="togGhost" onclick="toggleSettingObj('ghost',this)"></div></div>
+        <div class="sr"><div class="sr-left"><div class="sr-lbl">Auto Save Status</div><div class="sr-desc">Save viewed statuses</div></div><div class="toggle" id="togAutoSave" onclick="toggleSettingObj('autosaveStatus',this)"></div></div>
+      </div>
+      <div class="card" style="margin-bottom:.875rem">
+        <div class="card-title">🛡 Protection</div>
+        <div class="sr"><div class="sr-left"><div class="sr-lbl">Anti Call</div><div class="sr-desc">Auto-reject incoming calls</div></div><div class="toggle" id="togAntiCall" onclick="toggleAntiCall(this)"></div></div>
+        <div class="sr"><div class="sr-left"><div class="sr-lbl">Anti Spam</div><div class="sr-desc">Block spam messages</div></div><div class="toggle" id="togAntiSpam" onclick="toggleAntiSpam(this)"></div></div>
+        <div class="sr"><div class="sr-left"><div class="sr-lbl">Do Not Disturb</div><div class="sr-desc">Auto-reply with DND message when someone messages you</div><div class="sr-val" id="setDndMsg"></div><div style="font-size:.7rem;color:var(--t3);margin-top:.2rem;font-family:var(--fm)">💡 To set message: type <span style="color:var(--red)">.setdndmsg your message</span></div></div><div class="toggle" id="togDnd" onclick="toggleDnd(this)"></div></div>
+        <div class="sr"><div class="sr-left"><div class="sr-lbl">Away Message</div><div class="sr-desc">Auto-reply when you're away</div><div class="sr-val" id="setAwayMsg"></div><div style="font-size:.7rem;color:var(--t3);margin-top:.2rem;font-family:var(--fm)">💡 To set message: type <span style="color:var(--red)">.setawaymsg your message</span></div></div><div class="toggle" id="togAway" onclick="toggleAway(this)"></div></div>
+      </div>
+      <div class="card" style="margin-bottom:.875rem">
+        <div class="card-title">🤖 Chatbot</div>
+        <div class="sr"><div class="sr-left"><div class="sr-lbl">Enabled</div></div><div class="toggle" id="togChatbot" onclick="toggleChatbot('enabled',this)"></div></div>
+        <div class="sr"><div class="sr-left"><div class="sr-lbl">DM Replies</div></div><div class="toggle" id="togChatbotDm" onclick="toggleChatbot('dm',this)"></div></div>
+        <div class="sr"><div class="sr-left"><div class="sr-lbl">Group Replies</div></div><div class="toggle" id="togChatbotGrp" onclick="toggleChatbot('group',this)"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">📋 Menu &amp; Bot Identity</div>
+
+        <div class="field">
+          <label>Bot Name</label>
+          <input type="text" id="setBotName" placeholder="e.g. BIG DADDY">
+          <div style="font-size:.7rem;color:var(--t3);margin-top:.25rem;font-family:var(--fm)">💡 Command: <span style="color:var(--red)">.setbotname Your Name</span></div>
+        </div>
+
+        <div class="field">
+          <label>Bot Image URL</label>
+          <input type="url" id="setBotImageUrl" placeholder="https://i.imgur.com/example.jpg">
+          <div style="font-size:.7rem;color:var(--t3);margin-top:.25rem;font-family:var(--fm)">💡 Command: <span style="color:var(--red)">.setbotimage URL</span> — paste any image link</div>
+        </div>
+
+        <div class="field">
+          <label>Menu Caption / Intro Text</label>
+          <textarea id="setMenuCaption" placeholder="Intro text for the bot menu…" style="min-height:70px"></textarea>
+          <div style="font-size:.7rem;color:var(--t3);margin-top:.25rem;font-family:var(--fm)">Default: <span style="color:var(--amber)">Hello! I am {botname}. Type {prefix}help to see all commands.</span></div>
+        </div>
+
+        <div class="field">
+          <label>Menu Button Text</label>
+          <input type="text" id="setMenuText" placeholder="e.g. 📜 COMMANDS LIST">
+          <div style="font-size:.7rem;color:var(--t3);margin-top:.25rem;font-family:var(--fm)">Default: <span style="color:var(--amber)">「 MENU 」</span> — 💡 Command: <span style="color:var(--red)">.menutext Your Text</span></div>
+        </div>
+
+        <div style="display:flex;gap:.4375rem;flex-wrap:wrap">
+          <button class="btn btn-primary btn-sm" onclick="saveMenuSettings()">💾 Save Menu</button>
+          <button class="btn btn-ghost btn-sm" onclick="resetMenu()">↺ Reset</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- STORIES TAB -->
+    <div class="bp-tab" id="btab-stories">
+      <div class="ph-row" style="margin-bottom:.875rem">
+        <div><h2 style="font-family:var(--fd);font-size:1rem;font-weight:700">Stories</h2><p style="font-size:.8rem;color:var(--t2)">WhatsApp statuses viewed by your bot</p></div>
+        <button class="btn btn-ghost btn-sm" onclick="loadStatuses()">↺ Refresh</button>
+      </div>
+      <div id="statusFeed" style="display:flex;flex-direction:column;gap:.625rem"></div>
+    </div>
+
+  </div><!-- /bp-scroll -->
+
+  <div class="bp-nav">
+    <button class="bn-item active" onclick="switchBotTab('status',this)"><span class="bn-ico">📡</span><span class="bn-lbl">Status</span></button>
+    <button class="bn-item" onclick="switchBotTab('edit',this)"><span class="bn-ico">⚙️</span><span class="bn-lbl">Settings</span></button>
+    <button class="bn-item" onclick="switchBotTab('stories',this)"><span class="bn-ico">👁</span><span class="bn-lbl">Stories</span></button>
+  </div>
+</div><!-- /bot-page -->
+
+<!-- NOTIF PANEL -->
+<div class="notif-panel" id="notifPanel">
+  <div class="notif-hdr"><strong>Notifications</strong><button class="n-clear" onclick="clearNotifs()">Clear all</button></div>
+  <div class="n-scroll" id="notifList"><div style="padding:1.25rem;text-align:center;font-size:.875rem;color:var(--t2)">No notifications</div></div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-wrap" id="confirmModal">
+  <div class="modal">
+    <div class="modal-head"><h3>Confirm</h3><button class="modal-x" onclick="closeModal()">✕</button></div>
+    <div class="modal-body"><p id="modalMsg"></p></div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-danger" id="modalOk">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══ ADMIN REDIRECT ══
+const ADMIN_ID = '6300694007';
+const userId = (() => { const s = window.location.pathname.split('/'); return s[s.length-1] || ''; })();
+if (userId === ADMIN_ID) window.location.replace('/admin-panel/' + ADMIN_ID);
+
+// ══ STATE ══
+let user = { firstName:'User', lastName:'', email:'' };
+const slots = [
+    { name:'Bot 1', number:'', prefix:'none', status:'empty', startTime:null, uptime:0, endpoint:null, slotIndex:0 },
+    { name:'Bot 2', number:'', prefix:'none', status:'empty', startTime:null, uptime:0, endpoint:null, slotIndex:1 },
+    { name:'Bot 3', number:'', prefix:'none', status:'empty', startTime:null, uptime:0, endpoint:null, slotIndex:2 }
+];
+let activeSlot = 0;
+let modalCb = null;
+let communityPollInterval = null;
+let lastMsgTime = 0;
+let currentBotSlot = 0;
+let botPagePollInterval = null;
+let currentBotSettings = {};
+
+const PAGE_TITLES = { home:'Overview', deploy:'Add Bot', community:'Community Chat', support:'Support Center', history:'Deploy History', settings:'Settings' };
+
+// ══ INIT ══
+document.addEventListener('DOMContentLoaded', async () => {
+    if (userId === ADMIN_ID) return;
+    loadSlotsFromStorage();
+    populateFAQ();
+    updateSlotUsage();
+    updateNavCount();
+    setInterval(tickUptimes, 1000);
+    await Promise.allSettled([fetchUser(), fetchTickets(), fetchOnlineCount()]);
+    renderHomeSlotCards();
+    if (userId) startSSE();
+    if (window.Telegram?.WebApp) { Telegram.WebApp.ready(); Telegram.WebApp.expand(); }
+    document.getElementById('chatInput')?.addEventListener('keypress', e => { if (e.key==='Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); } });
+});
+
+// ══ USER FETCH ══
+async function fetchUser() {
+    try {
+        const d = await apiFetch('/api/user/' + userId);
+        if (d.success && d.user) {
+            user = d.user;
+            const activeBots = d.user.activeBots || [];
+            slots.forEach(s => { s.number=''; s.prefix='none'; s.status='empty'; s.endpoint=null; s.startTime=null; s.uptime=0; });
+            activeBots.forEach(b => {
+                const idx = b.slotIndex != null ? parseInt(b.slotIndex) : -1;
+                if (idx >= 0 && idx < 3) {
+                    const rawSt = b.status || '';
+                    slots[idx].number    = b.number || '';
+                    slots[idx].prefix    = b.prefix || 'none';
+                    slots[idx].status    = (rawSt==='connected'||rawSt==='running') ? 'running' : (rawSt==='pairing'||rawSt==='verifying') ? 'verifying' : 'running';
+                    slots[idx].endpoint  = b.endpoint || null;
+                    slots[idx].startTime = b.startTime ? new Date(b.startTime).getTime() : Date.now();
+                    slots[idx].uptime    = b.startTime ? Math.floor((Date.now()-new Date(b.startTime).getTime())/1000) : 0;
+                    slots[idx].name      = b.name || (b.number ? '+'+b.number : 'Bot '+(idx+1));
+                }
+            });
+            saveSlotsToStorage();
+            slots.forEach((s,i) => syncTabDot(i, s.status==='running'?'on':s.status==='verifying'?'verifying':''));
+            updateSlotUsage(); updateNavCount();
+        }
+    } catch(_) {}
+    applyUser();
+    renderBotNav();
+}
+
+function applyUser() {
+    const fn = user.firstName || 'User';
+    const ln = user.lastName  || '';
+    const init = ((fn[0]||'U')+(ln[0]||'')).toUpperCase();
+    const name = (fn+' '+ln).trim();
+    setEl('sidebarAvatar', init);
+    setEl('sidebarName',   name);
+    setEl('homeName',      fn);
+    const sn = document.getElementById('settingName');  if (sn) sn.value  = name;
+    const se = document.getElementById('settingEmail'); if (se) se.value  = user.email || '';
+}
+
+// ══ RENDER BOT NAV (sidebar) ══
+function renderBotNav() {
+    const el = document.getElementById('botNavList');
+    if (!el) return;
+    const active = slots.filter(s => s.status !== 'empty');
+    if (!active.length) {
+        el.innerHTML = '<div style="padding:.375rem 1rem;font-size:.75rem;color:var(--t3)">No bots deployed</div>';
+        return;
+    }
+    el.innerHTML = active.map(s => {
+        const dotCls = 'be-indicator' + (s.status==='running' ? ' on' : s.status==='verifying' ? ' verifying' : '');
+        const displayName = s.name && !s.name.startsWith('Bot ') ? s.name : (s.number ? '+'+s.number : 'Bot '+(s.slotIndex+1));
+        const phone = s.number ? '+'+s.number : '';
+        return `<div class="bot-entry" onclick="openBotPage(${s.slotIndex})" title="${esc(displayName)}">
+            <div class="${dotCls}"></div>
+            <div class="be-names">
+                <div class="be-name">${esc(displayName)}</div>
+                ${phone ? `<div class="be-num">${phone}</div>` : ''}
+            </div>
+        </div>`;
+    }).join('');
+}
+
+// ══ HOME SLOT CARDS ══
+function renderHomeSlotCards() {
+    const g = document.getElementById('homeSlotCards');
+    if (!g) return;
+    g.innerHTML = '';
+
+    slots.forEach((s, idx) => {
+        const el = document.createElement('div');
+        el.className = 'bc ' + s.status;
+
+        if (s.status === 'empty') {
+            el.innerHTML = `
+                <div class="bc-head">
+                    <span style="font-size:.6rem;font-weight:800;letter-spacing:.12em;color:var(--t3);font-family:var(--fd)">SLOT ${idx+1}</span>
+                    <span class="pill pill-muted"><span class="pd"></span>Empty</span>
+                </div>
+                <div class="bc-empty-body">
+                    <div class="bc-empty-ico">🤖</div>
+                    <div class="bc-empty-title">Slot ${idx+1} Available</div>
+                    <div class="bc-empty-sub">No bot deployed here</div>
+                    <button class="btn btn-primary btn-sm" onclick="goDeploySlot(${idx})">+ Add Bot</button>
+                </div>`;
+        } else {
+            el.onclick = () => openBotPage(idx);
+            const avatarCls = s.status === 'running' ? 'bc-avatar live' : 'bc-avatar';
+            const pill = s.status==='running'
+                ? '<span class="pill pill-green"><span class="pd pulse"></span>Online</span>'
+                : s.status==='verifying'
+                ? '<span class="pill pill-amber"><span class="pd"></span>Verifying</span>'
+                : '<span class="pill pill-muted"><span class="pd"></span>Offline</span>';
+            const ut = s.status==='running' ? fmtTime(s.uptime) : '—';
+            const displayName = s.name && !s.name.startsWith('Bot ') ? s.name : 'Bot '+(idx+1);
+            el.innerHTML = `
+                <div class="bc-head">
+                    <div class="${avatarCls}">🤖</div>
+                    ${pill}
+                </div>
+                <div class="bc-body">
+                    <div class="bc-name">${esc(displayName)}</div>
+                    <div class="bc-phone">+${esc(s.number)||'—'}</div>
+                    <div class="bc-metrics">
+                        <div class="bc-m"><strong style="color:var(--red)">${esc(s.prefix||'none')}</strong><span>Prefix</span></div>
+                        <div class="bc-m"><strong id="card-ut-${idx}">${ut}</strong><span>Uptime</span></div>
+                        <div class="bc-m"><strong>${idx+1}</strong><span>Slot</span></div>
+                    </div>
+                    <div class="bc-actions">
+                        <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();openBotPage(${idx})">Manage →</button>
+                        ${s.status==='running' ? `<button class="btn btn-danger btn-sm" onclick="event.stopPropagation();quickStop(${idx})">⏹</button>` : ''}
+                    </div>
+                </div>`;
+        }
+        g.appendChild(el);
+    });
+
+    const active = slots.filter(s=>s.status==='running').length;
+    setEl('homeActiveBots', active);
+    const r = slots.find(s=>s.status==='running');
+    setEl('homeUptime', r ? fmtTime(r.uptime) : '—');
+    renderBotNav();
+}
+
+// ══ BOT PAGE ══
+function openBotPage(idx) {
+    currentBotSlot = idx;
+    const s = slots[idx];
+    document.getElementById('botPage').classList.add('active');
+    const displayName = s.name && !s.name.startsWith('Bot ') ? s.name : (s.number ? '+'+s.number : 'Bot '+(idx+1));
+    setEl('bpName', displayName);
+    setEl('bpPhone', s.number ? '+'+s.number : '—');
+    // Reset to status tab
+    document.querySelectorAll('.bp-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.bn-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('btab-status')?.classList.add('active');
+    document.querySelector('.bn-item')?.classList.add('active');
+    refreshBotStatus();
+    // close sidebar on mobile
+    closeSidebar();
+}
+
+function closeBotPage() {
+    document.getElementById('botPage').classList.remove('active');
+    if (botPagePollInterval) { clearInterval(botPagePollInterval); botPagePollInterval = null; }
+    renderHomeSlotCards();
+}
+
+function switchBotTab(name, el) {
+    document.querySelectorAll('.bp-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.bn-item').forEach(n => n.classList.remove('active'));
+    const tab = document.getElementById('btab-' + name);
+    if (tab) tab.classList.add('active');
+    if (el) el.classList.add('active');
+    if (name === 'status')   refreshBotStatus();
+    if (name === 'edit')     refreshBotSettings();
+    if (name === 'stories')  loadStatuses();
+}
+
+async function refreshBotStatus() {
+    const s = slots[currentBotSlot];
+    if (!s.endpoint || !s.number) { setOfflineStatus(); return; }
+    try {
+        const [verRes, statusRes] = await Promise.allSettled([
+            fetch(s.endpoint + '/checkverification?phoneNumber=' + s.number, { signal: AbortSignal.timeout(8000) }).then(r=>r.json()),
+            fetch(s.endpoint + '/status', { signal: AbortSignal.timeout(8000) }).then(r=>r.json())
+        ]);
+        const ver    = verRes.status === 'fulfilled' ? verRes.value : null;
+        const status = statusRes.status === 'fulfilled' ? statusRes.value : null;
+        const connected = ver?.connected === true;
+        const bar = document.getElementById('bpStatusBar');
+        const dot = document.getElementById('bpStatusDot');
+        if (connected) {
+            bar?.classList.remove('offline','verifying'); bar?.classList.add('online');
+            if (dot) dot.classList.add('pulse');
+            setEl('bpStatusText', '🟢 Connected & Online');
+            setEl('bpConn', '🟢 Online');
+            if (slots[currentBotSlot].status !== 'running') {
+                slots[currentBotSlot].status = 'running';
+                slots[currentBotSlot].startTime = slots[currentBotSlot].startTime || Date.now();
+                saveSlotsToStorage(); syncTabDot(currentBotSlot,'on');
+                updateNavCount(); updateSlotUsage();
+            }
+        } else {
+            bar?.classList.remove('online'); bar?.classList.add('offline');
+            if (dot) dot.classList.remove('pulse');
+            setEl('bpStatusText', '⚫ Offline');
+            setEl('bpConn', '⚫ Offline');
+        }
+        setEl('bpConnPhone', s.number ? '+'+s.number : '—');
+        setEl('bpPrefix',    s.prefix || 'none');
+        setEl('bpUptime',    s.startTime ? fmtTime(Math.floor((Date.now()-s.startTime)/1000)) : '—');
+        if (status?.success) setEl('bpMode', '—');
+        if (s.endpoint && s.number) {
+            try {
+                const sr = await fetch(s.endpoint + '/api/settings/' + s.number, { signal: AbortSignal.timeout(6000) });
+                const sd = await sr.json();
+                if (sd.success) setEl('bpMode', sd.settings?.mode || '—');
+            } catch(_) {}
+        }
+    } catch(_) { setOfflineStatus(); }
+}
+
+function setOfflineStatus() {
+    const bar = document.getElementById('bpStatusBar');
+    const dot = document.getElementById('bpStatusDot');
+    bar?.classList.remove('online','verifying'); bar?.classList.add('offline');
+    if (dot) dot.classList.remove('pulse');
+    setEl('bpStatusText', '⚫ Offline');
+    setEl('bpConn', '⚫ Offline');
+    const s = slots[currentBotSlot];
+    setEl('bpConnPhone', s.number ? '+'+s.number : '—');
+    setEl('bpPrefix',    s.prefix || 'none');
+    setEl('bpUptime',    '—');
+}
+
+async function refreshBotSettings() {
+    const s = slots[currentBotSlot];
+    if (!s.endpoint || !s.number) return;
+    try {
+        const r = await fetch(s.endpoint + '/api/settings/' + s.number, { signal: AbortSignal.timeout(8000) });
+        const d = await r.json();
+        if (!d.success) return;
+        const st = d.settings;
+        currentBotSettings = st;
+        setEl('setMode', st.mode || 'public');
+        setToggle('togAutoStatus', st.autostatusview === 'on');
+        setToggle('togAutoReact',  st.autoreact       === 'on');
+        setToggle('togAutoRead',   st.autoread        === 'on');
+        setToggle('togGhost',      !!st.ghost);
+        setToggle('togAutoSave',   !!st.autosaveStatus);
+        setToggle('togAntiCall', !!st.anticall?.enabled);
+        setToggle('togAntiSpam', !!st.antispam?.enabled);
+        setToggle('togDnd', !!st.dnd?.enabled);
+        setEl('setDndMsg',  st.dnd?.enabled  ? ('"'+st.dnd.message+'"')  : '');
+        setToggle('togAway', !!st.away?.enabled);
+        setEl('setAwayMsg', st.away?.enabled ? ('"'+st.away.message+'"') : '');
+        setToggle('togChatbot',    !!st.chatbot?.enabled);
+        setToggle('togChatbotDm',  !!st.chatbot?.dm);
+        setToggle('togChatbotGrp', !!st.chatbot?.group);
+        const bn = document.getElementById('setBotName');
+        const bi = document.getElementById('setBotImageUrl');
+        const mc = document.getElementById('setMenuCaption');
+        const mt = document.getElementById('setMenuText');
+        if (bn) bn.value = st.menu?.botname || '';
+        if (bi) bi.value = st.menu?.imageUrl || st.botimage || '';
+        if (mc) mc.value = st.menu?.caption || '';
+        if (mt) mt.value = st.menu?.menutext || st.menutext || '';
+    } catch(_) {}
+}
+
+// ── Setting helpers ──
+async function setSetting(key, value) {
+    const s = slots[currentBotSlot]; if (!s.endpoint || !s.number) return;
+    try {
+        await fetch(s.endpoint + '/api/settings/' + s.number, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ [key]: value }) });
+        setEl('setMode', value);
+        addNotif('Updated', key+' → '+value, 's');
+    } catch(_) { addNotif('Error', 'Failed to update', 'e'); }
+}
+async function toggleSetting(key, el) {
+    el.classList.toggle('on');
+    const val = el.classList.contains('on') ? 'on' : 'off';
+    const s = slots[currentBotSlot]; if (!s.endpoint || !s.number) return;
+    try { await fetch(s.endpoint + '/api/settings/' + s.number, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ [key]: val }) }); } catch(_) {}
+}
+async function toggleSettingObj(key, el) {
+    el.classList.toggle('on');
+    const enabled = el.classList.contains('on');
+    const s = slots[currentBotSlot]; if (!s.endpoint || !s.number) return;
+    const endpointKey = key === 'autosaveStatus' ? 'autosave' : key;
+    try { await fetch(s.endpoint + '/api/settings/' + s.number + '/' + endpointKey, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ enabled }) }); } catch(_) {}
+}
+async function toggleAntiCall(el) {
+    el.classList.toggle('on'); const enabled = el.classList.contains('on');
+    const s = slots[currentBotSlot]; if (!s.endpoint || !s.number) return;
+    try { await fetch(s.endpoint + '/api/settings/' + s.number + '/anticall', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ enabled }) }); } catch(_) {}
+}
+async function toggleAntiSpam(el) {
+    el.classList.toggle('on'); const enabled = el.classList.contains('on');
+    const s = slots[currentBotSlot]; if (!s.endpoint || !s.number) return;
+    try { await fetch(s.endpoint + '/api/settings/' + s.number + '/antispam', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ enabled }) }); } catch(_) {}
+}
+async function toggleDnd(el) {
+    el.classList.toggle('on'); const enabled = el.classList.contains('on');
+    const s = slots[currentBotSlot]; if (!s.endpoint || !s.number) return;
+    try {
+        await fetch(s.endpoint + '/api/settings/' + s.number + '/dnd', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ enabled }) });
+        setEl('setDndMsg', enabled && currentBotSettings.dnd?.message ? '"'+currentBotSettings.dnd.message+'"' : '');
+    } catch(_) {}
+}
+async function toggleAway(el) {
+    el.classList.toggle('on'); const enabled = el.classList.contains('on');
+    const s = slots[currentBotSlot]; if (!s.endpoint || !s.number) return;
+    try {
+        await fetch(s.endpoint + '/api/settings/' + s.number + '/away', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ enabled }) });
+        setEl('setAwayMsg', enabled && currentBotSettings.away?.message ? '"'+currentBotSettings.away.message+'"' : '');
+    } catch(_) {}
+}
+async function toggleChatbot(field, el) {
+    el.classList.toggle('on'); const val = el.classList.contains('on');
+    const s = slots[currentBotSlot]; if (!s.endpoint || !s.number) return;
+    try { await fetch(s.endpoint + '/api/settings/' + s.number + '/chatbot', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ [field]: val }) }); } catch(_) {}
+}
+async function saveMenuSettings() {
+    const s = slots[currentBotSlot]; if (!s.endpoint || !s.number) return;
+    const botname  = document.getElementById('setBotName')?.value.trim();
+    const imageUrl = document.getElementById('setBotImageUrl')?.value.trim();
+    const caption  = document.getElementById('setMenuCaption')?.value.trim();
+    const menutext = document.getElementById('setMenuText')?.value.trim();
+    try {
+        const calls = [];
+        // Save menu caption + botname to /menu endpoint
+        calls.push(fetch(s.endpoint + '/api/settings/' + s.number + '/menu', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ botname: botname||null, caption: caption||null })
+        }));
+        // Save botname separately too
+        if (botname) calls.push(fetch(s.endpoint + '/api/settings/' + s.number + '/botname', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ botname })
+        }));
+        // Save bot image via setbotimage endpoint
+        if (imageUrl) calls.push(fetch(s.endpoint + '/api/settings/' + s.number + '/setbotimage', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ imageUrl, url: imageUrl })
+        }).catch(_=>{}));
+        // Save menu button text via menutext endpoint
+        if (menutext) calls.push(fetch(s.endpoint + '/api/settings/' + s.number + '/menutext', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ text: menutext, menutext })
+        }).catch(_=>{}));
+        await Promise.allSettled(calls);
+        addNotif('Saved', 'Menu settings updated.', 's');
+    } catch(_) { addNotif('Error', 'Failed to save menu', 'e'); }
+}
+async function resetMenu() {
+    const s = slots[currentBotSlot]; if (!s.endpoint || !s.number) return;
+    try {
+        await fetch(s.endpoint + '/api/settings/' + s.number + '/menu', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ reset: true }) });
+        const bn = document.getElementById('setBotName'); if(bn) bn.value='';
+        const bi = document.getElementById('setBotImageUrl'); if(bi) bi.value='';
+        const mc = document.getElementById('setMenuCaption'); if(mc) mc.value='';
+        const mt = document.getElementById('setMenuText'); if(mt) mt.value='';
+        addNotif('Reset', 'Menu cleared.', 'i');
+    } catch(_) {}
+}
+async function loadStatuses() {
+    const s = slots[currentBotSlot];
+    const feed = document.getElementById('statusFeed');
+    if (!feed) return;
+    if (!s.endpoint || !s.number) { feed.innerHTML = '<div style="color:var(--t3);text-align:center;padding:2rem;font-size:.875rem">No endpoint assigned.</div>'; return; }
+    feed.innerHTML = '<div style="color:var(--t3);text-align:center;padding:1.5rem"><div class="spinner"></div></div>';
+    try {
+        const r = await fetch(s.endpoint + '/api/status/' + s.number, { signal: AbortSignal.timeout(8000) });
+        const d = await r.json();
+        if (!d.success || !d.statuses?.length) { feed.innerHTML = '<div style="color:var(--t3);text-align:center;padding:2rem;font-size:.875rem">No stories yet.</div>'; return; }
+        feed.innerHTML = d.statuses.map(st => {
+            const ts = st.timestamp ? new Date(st.timestamp).toLocaleString() : '—';
+            return '<div class="card" style="padding:.875rem">'
+                + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem">'
+                + '<div style="font-size:.875rem;font-weight:700;font-family:var(--fd)">'+esc(st.sender||st.pushName||'Unknown')+'</div>'
+                + '<div style="display:flex;gap:.375rem;align-items:center"><span class="pill pill-muted">'+esc(st.type||'text')+'</span><span style="font-size:.65rem;color:var(--t3)">'+ts+'</span></div></div>'
+                + (st.caption||st.text ? '<div style="font-size:.8125rem;color:var(--t2)">'+esc(st.caption||st.text||'')+'</div>' : '')
+                + '</div>';
+        }).join('');
+    } catch(_) { feed.innerHTML = '<div style="color:var(--t3);text-align:center;padding:2rem;font-size:.875rem">Could not reach endpoint.</div>'; }
+}
+
+async function saveCurrentSession() {
+    const s = slots[currentBotSlot]; if (!s.endpoint) return;
+    try { const r = await fetch(s.endpoint+'/savesession',{signal:AbortSignal.timeout(10000)}); const d=await r.json(); addNotif(d.success?'Session Saved':'Save Failed',d.message||d.error||'',d.success?'s':'e'); } catch(_) { addNotif('Error','Could not reach endpoint','e'); }
+}
+function stopCurrentBot() {
+    openModal('Stop '+esc(slots[currentBotSlot].name||'this bot')+'?', async () => {
+        const s = slots[currentBotSlot];
+        try { await fetch('/api/stop-bot', { method:'POST', headers:{'Content-Type':'application/json','User-Id':userId}, body: JSON.stringify({ phoneNumber:s.number, userId, endpoint:s.endpoint }) }); } catch(_) {}
+        slots[currentBotSlot].status='empty'; slots[currentBotSlot].endpoint=null; slots[currentBotSlot].startTime=null;
+        saveSlotsToStorage(); syncTabDot(currentBotSlot,''); updateNavCount(); updateSlotUsage();
+        addNotif('Bot Stopped', (slots[currentBotSlot].name||'Bot')+' stopped.', 'w');
+        closeBotPage();
+    });
+}
+function restartCurrentBot() {
+    openModal('Restart '+esc(slots[currentBotSlot].name||'this bot')+'?', async () => {
+        const s = slots[currentBotSlot];
+        try {
+            const d = await apiFetch('/api/restart-bot', { method:'POST', body: JSON.stringify({ phoneNumber:s.number, prefix:s.prefix, userId }) });
+            if (d.success) { slots[currentBotSlot].endpoint=d.endpoint; slots[currentBotSlot].status='verifying'; saveSlotsToStorage(); syncTabDot(currentBotSlot,'verifying'); addNotif('Restarting','Reconnecting…','i'); setTimeout(()=>refreshBotStatus(),5000); }
+        } catch(_) { addNotif('Error','Restart failed','e'); }
+    });
+}
+
+// ══ NAVIGATION ══
+function gotoPage(name, el) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    const pg = document.getElementById('page-' + name);
+    if (pg) pg.classList.add('active');
+    if (el) el.classList.add('active');
+    else document.querySelectorAll('.nav-item').forEach(n => { if (n.getAttribute('onclick')?.includes("'"+name+"'")) n.classList.add('active'); });
+    setEl('topbarTitle', PAGE_TITLES[name] || name);
+    closeSidebar();
+    if (name==='community') { document.getElementById('communityBadge').style.display='none'; startCommunityPolling(); }
+    else stopCommunityPolling();
+    if (name==='home')    renderHomeSlotCards();
+    if (name==='support') fetchTickets();
+    if (name==='history') fetchDeployHistory();
+}
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebarOverlay').classList.toggle('show'); }
+function closeSidebar()  { document.getElementById('sidebar').classList.remove('open');  document.getElementById('sidebarOverlay').classList.remove('show'); }
+
+// ══ DEPLOY ══
+function selectSlot(idx, el) {
+    activeSlot = idx;
+    document.querySelectorAll('.slot-tab').forEach(t => t.classList.remove('active'));
+    if (el) el.classList.add('active');
+    const s = slots[idx];
+    setEl('slotLbl', 'Slot '+(idx+1));
+    document.getElementById('consoleLabel').textContent = 'bigdaddy-v3 — slot-'+(idx+1)+' — bash';
+    setEl('stSlot', 'Slot '+(idx+1));
+    const bn = document.getElementById('botName');   if(bn) bn.value = s.name||'';
+    const pn = document.getElementById('phoneNum');  if(pn) pn.value = s.number||'';
+    setEl('stPrefix', s.prefix||'none');
+    document.querySelectorAll('[name=pfx]').forEach(r => { if (r.value===(s.prefix||'none')) r.checked=true; });
+    syncDeployUI(s.status);
+    log('▶ Switched to Slot '+(idx+1),'info');
+    if (s.status==='running')   log('✅ This slot is ONLINE','success');
+    if (s.status==='verifying') log('🔄 Verification in progress…','info');
+}
+function syncDeployUI(status) {
+    document.getElementById('startBtn').style.display   = ['running','verifying'].includes(status)?'none':'';
+    document.getElementById('stopBtn').style.display    = ['running','verifying'].includes(status)?'':'none';
+    document.getElementById('restartBtn').style.display = status==='running'?'':'none';
+    const conn = document.getElementById('stConnection');
+    if (!conn) return;
+    if (status==='running')        { conn.textContent='🟢 Online';    conn.style.color='var(--green)'; }
+    else if (status==='verifying') { conn.textContent='🟡 Verifying'; conn.style.color='var(--amber)'; }
+    else                           { conn.textContent='⚫ Offline';   conn.style.color='var(--t2)'; }
+}
+async function startDeploy() {
+    const phone  = document.getElementById('phoneNum').value.trim().replace(/\D/g,'');
+    const name   = document.getElementById('botName').value.trim() || ('Bot '+(activeSlot+1));
+    const prefix = document.querySelector('[name=pfx]:checked')?.value || 'none';
+    if (!phone||phone.length<7) { log('Enter a valid WhatsApp number','error'); return; }
+    if (slots.filter(s=>s.status!=='empty').length>=3) { log('All 3 slots in use. Stop a bot first.','error'); return; }
+    const s = slots[activeSlot];
+    s.number=phone; s.prefix=prefix; s.name=name; s.status='verifying';
+    saveSlotsToStorage();
+    const btn = document.getElementById('startBtn');
+    btn.disabled=true; btn.innerHTML='<div class="spinner"></div> Connecting…';
+    syncDeployUI('verifying'); syncTabDot(activeSlot,'verifying');
+    updateSlotUsage(); updateNavCount();
+    log('Starting deployment for +'+phone,'info');
+    log('Prefix: '+prefix+' · '+name,'default');
+    try {
+        log('Connecting to database…','info');
+        const epd = await apiFetch('/api/get-endpoint', { method:'POST', body: JSON.stringify({ prefix }) });
+        if (!epd.success) throw new Error(epd.error||'No server available');
+        s.endpoint = epd.endpoint;
+        log('Server assigned successfully','success');
+        log('Linking +'+phone+' to server…','info');
+        let pr = await fetch(epd.endpoint+'/pair?phoneNumber='+phone, { signal: AbortSignal.timeout(20000) }).then(r=>r.json());
+        if (!pr.success && pr.error && pr.error.toLowerCase().includes('already connected')) {
+            log('+'+phone+' has a stale session — clearing it…','warn');
+            await fetch(epd.endpoint+'/delpair?phoneNumber='+phone, { signal: AbortSignal.timeout(10000) }).catch(_=>{});
+            log('Stale session cleared. Reconnecting…','info');
+            await new Promise(res => setTimeout(res, 2000));
+            pr = await fetch(epd.endpoint+'/pair?phoneNumber='+phone, { signal: AbortSignal.timeout(20000) }).then(r=>r.json());
+        }
+        if (!pr.success) throw new Error(pr.error||'Failed to link number');
+        const code = pr.pairingCode;
+        if (code && code !== 'CHECK_WHATSAPP' && code !== 'ALREADY_CONNECTED') {
+            setEl('pairingCodeVal', code);
+            document.getElementById('pairingBox').classList.add('show');
+            log('Pairing code ready — enter it in WhatsApp','success');
+        } else if (code === 'ALREADY_CONNECTED') {
+            log('+'+phone+' reconnected successfully','success');
+        } else {
+            log('Open WhatsApp → Settings → Linked Devices → Link a Device','info');
+        }
+        log('Waiting for WhatsApp confirmation…','info');
+        saveSlotsToStorage(); updateNavCount(); renderBotNav();
+        setEl('stSlot', name); setEl('stPrefix', prefix);
+        await apiFetch('/api/start-verification', { method:'POST', body: JSON.stringify({ phoneNumber:phone, endpoint:epd.endpoint, userId, prefix, attempts:6, slotIndex:activeSlot }) });
+        log('Verification running in background…','default');
+    } catch(err) {
+        log(err.message,'error');
+        s.status='empty'; saveSlotsToStorage();
+        syncDeployUI('empty'); syncTabDot(activeSlot,'');
+        updateSlotUsage(); updateNavCount();
+    } finally { btn.disabled=false; btn.innerHTML='▶ Connect Bot'; }
+}
+function stopDeploy() {
+    openModal('Stop this bot?', async () => {
+        const s = slots[activeSlot];
+        log('⏹ Stopping…','warn');
+        try { await apiFetch('/api/stop-bot', { method:'POST', body: JSON.stringify({ phoneNumber:s.number, userId, endpoint:s.endpoint }) }); log('Disconnected','success'); } catch(_) { log('Could not reach server','warn'); }
+        s.status='empty'; s.endpoint=null; s.startTime=null;
+        saveSlotsToStorage();
+        document.getElementById('pairingBox').classList.remove('show');
+        syncDeployUI('empty'); syncTabDot(activeSlot,'');
+        updateSlotUsage(); updateNavCount();
+        addNotif('Bot Stopped','Stopped.','w');
+        renderHomeSlotCards();
+        log('Slot is now free','success');
+    });
+}
+function restartDeploy() {
+    openModal('Restart this bot?', async () => {
+        const s = slots[activeSlot];
+        log('↺ Restarting…','info');
+        try {
+            const d = await apiFetch('/api/restart-bot', { method:'POST', body: JSON.stringify({ phoneNumber:s.number, prefix:s.prefix, userId }) });
+            if (d.success) { s.endpoint=d.endpoint; s.status='verifying'; saveSlotsToStorage(); syncDeployUI('verifying'); syncTabDot(activeSlot,'verifying'); log('Restarted','success'); await apiFetch('/api/start-verification', { method:'POST', body: JSON.stringify({ phoneNumber:s.number, endpoint:d.endpoint, userId, prefix:s.prefix, attempts:6, slotIndex:activeSlot }) }); }
+            else log('Restart failed: '+(d.error||'unknown'),'error');
+        } catch(_) { log('Network error','error'); }
+    });
+}
+function copyCode() {
+    const c = document.getElementById('pairingCodeVal').textContent;
+    if (c && c !== '——————') navigator.clipboard.writeText(c).then(() => log('Code copied!','success'));
+}
+
+// ══ SSE ══
+function startSSE() {
+    if (!window.EventSource) return;
+    const es = new EventSource('/api/status-stream/' + userId);
+    es.onmessage = e => {
+        try {
+            const d = JSON.parse(e.data);
+            if (d.type==='community_message') {
+                if (!document.getElementById('page-community')?.classList.contains('active')) {
+                    document.getElementById('communityBadge').style.display='';
+                } else {
+                    const body = document.getElementById('chatBody');
+                    if (body && d.message) {
+                        const m = d.message;
+                        const atBottom = body.scrollHeight - body.scrollTop - body.clientHeight < 80;
+                        body.appendChild(makeBubble(m.userName, m.text, fmtChatTime(m.timestamp), getColorForUser(m.userId), m.userId===userId));
+                        if (atBottom) body.scrollTop = body.scrollHeight;
+                        lastMsgTime = Date.now();
+                    }
+                }
+                return;
+            }
+            if (d.type==='ticket_updated') { addNotif('Ticket Updated','#'+d.ticketId+' — '+d.status,'i'); fetchTickets(); return; }
+            const idx = d.slotIndex!=null ? d.slotIndex : slots.findIndex(s=>s.number===d.phoneNumber);
+            if (d.type==='bot_connected') {
+                const i = idx>=0 ? idx : activeSlot;
+                slots[i].status='running'; slots[i].startTime=Date.now();
+                if (d.endpoint) slots[i].endpoint=d.endpoint;
+                saveSlotsToStorage(); syncTabDot(i,'on');
+                if (i===activeSlot) syncDeployUI('running');
+                updateNavCount(); updateSlotUsage();
+                addNotif('Bot Online', (slots[i].name||'Bot '+(i+1))+' connected.', 's');
+                log('🟢 '+(slots[i].name||'Bot '+(i+1))+' is ONLINE!','success');
+                renderHomeSlotCards();
+                if (document.getElementById('botPage').classList.contains('active') && currentBotSlot===i) refreshBotStatus();
+            } else if (d.type==='bot_disconnected' && idx>=0) {
+                slots[idx].status='empty'; slots[idx].startTime=null;
+                saveSlotsToStorage(); syncTabDot(idx,'');
+                if (idx===activeSlot) syncDeployUI('empty');
+                updateNavCount(); updateSlotUsage();
+                addNotif('Bot Offline', (slots[idx].name||'Bot '+(idx+1))+' disconnected.', 'w');
+                renderHomeSlotCards();
+            } else if (d.type==='bot_failed' && idx>=0) {
+                slots[idx].status='empty'; saveSlotsToStorage(); syncTabDot(idx,'');
+                if (idx===activeSlot) syncDeployUI('empty');
+                updateNavCount(); updateSlotUsage();
+                addNotif('Failed', (slots[idx].name||'Bot '+(idx+1))+' verification failed.', 'e');
+                renderHomeSlotCards();
+            }
+        } catch(_) {}
+    };
+    es.onerror = () => { es.close(); setTimeout(startSSE, 10000); };
+}
+
+// ══ COMMUNITY ══
+async function startCommunityPolling() { stopCommunityPolling(); await loadCommunityMessages(false); communityPollInterval = setInterval(() => loadCommunityMessages(true), 3000); }
+function stopCommunityPolling() { if (communityPollInterval) { clearInterval(communityPollInterval); communityPollInterval=null; } }
+async function loadCommunityMessages(pollOnly) {
+    try {
+        const url = pollOnly && lastMsgTime>0 ? '/api/community/messages?since='+lastMsgTime+'&userId='+userId : '/api/community/messages?limit=80&userId='+userId;
+        const d = await apiFetch(url);
+        if (!d.success) return;
+        const cnt = d.onlineCount||0;
+        setEl('onlineCount', cnt); setEl('chatOnlineLabel', cnt+' online'); setEl('homeOnline', cnt);
+        renderMemberList(d.onlineUsers||[]);
+        if (!d.messages?.length) return;
+        const body = document.getElementById('chatBody'); if (!body) return;
+        if (!pollOnly) body.innerHTML='';
+        const atBottom = body.scrollHeight-body.scrollTop-body.clientHeight<80;
+        const lm = body.querySelector('#chatLoadingMsg'); if (lm) lm.remove();
+        d.messages.forEach(m => body.appendChild(makeBubble(m.userName, m.text, fmtChatTime(m.timestamp), getColorForUser(m.userId), m.userId===userId)));
+        if (d.serverTime) lastMsgTime=d.serverTime;
+        if (atBottom||!pollOnly) body.scrollTop=body.scrollHeight;
+    } catch(_) {}
+}
+async function fetchOnlineCount() { try { const d = await apiFetch('/api/community/online'); setEl('homeOnline', d.onlineCount||0); } catch(_) {} }
+function renderMemberList(users) {
+    const list = document.getElementById('memberList'); if (!list) return;
+    list.innerHTML = '';
+    if (!users.length) { list.innerHTML='<div style="font-size:.75rem;color:var(--t3)">No one online yet</div>'; return; }
+    users.slice(0,15).forEach(u => {
+        const row = document.createElement('div'); row.className='member-row';
+        const color=getColorForUser(u.userId), init=(u.userName||'U').substring(0,2).toUpperCase();
+        row.innerHTML='<div class="member-av" style="background:'+color+'">'+init+'</div><span class="member-name">'+esc(u.userName||'User')+'</span><span class="member-badge">● online</span>';
+        list.appendChild(row);
+    });
+}
+function makeBubble(user, text, time, color, isOwn) {
+    const wrap = document.createElement('div'); wrap.className='msg-row'+(isOwn?' own':'');
+    const av = '<div class="msg-av" style="background:'+color+'">'+esc(user).substring(0,2).toUpperCase()+'</div>';
+    const bubble = '<div class="msg-bub">'+(!isOwn?'<div class="msg-author" style="color:'+color+'">'+esc(user)+'</div>':'')+'<div class="msg-text">'+esc(text)+'</div><div class="msg-time">'+time+'</div></div>';
+    wrap.innerHTML = isOwn ? bubble+av : av+bubble;
+    return wrap;
+}
+function fmtChatTime(ts) { const d=ts?new Date(ts):new Date(); return d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}); }
+async function sendMsg() {
+    const inp = document.getElementById('chatInput'); const txt = inp.value.trim(); if (!txt) return; inp.value='';
+    try { await apiFetch('/api/community/send', { method:'POST', body: JSON.stringify({ message:txt, userId, userName:user.firstName||'User' }) }); } catch(_) {}
+}
+
+// ══ TICKETS ══
+async function fetchTickets() { try { const d = await apiFetch('/api/support/tickets/'+userId); if (d.success) renderTickets(d.tickets||[]); } catch(_) {} }
+async function submitTicket() {
+    const subj = document.getElementById('tSubject').value.trim();
+    const cat  = document.getElementById('tCat').value;
+    const body = document.getElementById('tBody').value.trim();
+    if (!subj||!body) { addNotif('Missing Fields','Fill in all fields.','w'); return; }
+    const btn = event.target; btn.disabled=true; btn.textContent='Submitting…';
+    try {
+        const d = await apiFetch('/api/support/ticket', { method:'POST', body: JSON.stringify({ subject:subj, category:cat, body, userId }) });
+        if (d.success) { document.getElementById('tSubject').value=''; document.getElementById('tBody').value=''; addNotif('Ticket Created',d.ticket.id+' submitted.','s'); await fetchTickets(); }
+        else addNotif('Error',d.error||'Failed','e');
+    } catch(_) { addNotif('Error','Network error','e'); }
+    finally { btn.disabled=false; btn.textContent='Submit Ticket'; }
+}
+function renderTickets(tickets) {
+    const el = document.getElementById('ticketList'); if (!el) return;
+    if (!tickets.length) { el.innerHTML='<div style="text-align:center;padding:2rem;color:var(--t3);font-size:.875rem">No tickets yet.</div>'; return; }
+    const pc={open:'pill-green',pending:'pill-amber',closed:'pill-muted'};
+    el.innerHTML = tickets.map(t => '<div class="t-item"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.375rem"><span style="font-size:.6875rem;font-weight:700;color:var(--t3)">'+esc(t.id)+'</span><span class="pill '+(pc[t.status]||'pill-muted')+'">'+t.status.toUpperCase()+'</span></div><div style="font-size:.875rem;font-weight:700;font-family:var(--fd)">'+esc(t.subject)+'</div><div style="font-size:.775rem;color:var(--t2);margin-top:.2rem">'+esc(t.body)+'</div>'+(t.replies?.length?'<div style="margin-top:.375rem;padding:.375rem .5rem;background:var(--rg);border-left:2px solid var(--red);border-radius:0 .375rem .375rem 0;font-size:.775rem;color:var(--t2)">💬 Admin: '+esc(t.replies[t.replies.length-1].text)+'</div>':'')+'<div style="font-size:.6875rem;color:var(--t3);margin-top:.25rem">'+new Date(t.createdAt).toLocaleString()+'</div></div>').join('');
+}
+
+// ══ HISTORY ══
+async function fetchDeployHistory() {
+    const el = document.getElementById('historyList'); if (!el) return;
+    el.innerHTML = '<div style="color:var(--t3);font-size:.875rem;display:flex;align-items:center;gap:.5rem"><div class="spinner"></div> Loading…</div>';
+    try {
+        const d = await apiFetch('/api/deploy-history/'+userId);
+        if (!d.success||!d.history?.length) { el.innerHTML='<div style="color:var(--t3);font-size:.875rem;padding:.5rem 0">No history yet.</div>'; return; }
+        const ai={deploy:'🚀',stop:'⏹',restart:'↺'}, sc={connected:'pill-green',stopped:'pill-muted',failed:'pill-red',verifying:'pill-amber'};
+        el.innerHTML = d.history.map(h => '<div class="h-item"><div style="font-size:1.25rem;flex-shrink:0">'+(ai[h.action]||'📌')+'</div><div style="flex:1;min-width:0"><div style="font-size:.875rem;font-weight:700;font-family:var(--fd)">+'+esc(h.phoneNumber)+' <span style="color:var(--t2);font-weight:400">— Slot '+((h.slotIndex||0)+1)+'</span></div><div style="font-size:.75rem;color:var(--t2)">Prefix: <code style="color:var(--red);font-family:var(--fm)">'+esc(h.prefix)+'</code> &nbsp;·&nbsp; '+new Date(h.timestamp).toLocaleString()+'</div></div><span class="pill '+(sc[h.status]||'pill-muted')+'">'+h.status.toUpperCase()+'</span></div>').join('');
+    } catch(_) { el.innerHTML='<div style="color:var(--t3);font-size:.875rem">Could not load history.</div>'; }
+}
+
+// ══ CONSOLE ══
+function log(text, type='default') {
+    const out = document.getElementById('consoleOut'); if (!out) return;
+    const now=new Date(), ts=[now.getHours(),now.getMinutes(),now.getSeconds()].map(n=>String(n).padStart(2,'0')).join(':');
+    const el=document.createElement('span'); el.className='cl '+type;
+    el.innerHTML='<span class="ts">['+ts+']</span><span class="msg"> '+esc(text)+'</span>';
+    out.appendChild(el); out.appendChild(document.createElement('br'));
+    if (out.children.length>200) out.removeChild(out.firstChild);
+    out.scrollTop=out.scrollHeight;
+}
+function clearConsole() { document.getElementById('consoleOut').innerHTML=''; log('Console cleared','info'); }
+
+// ══ SYNC / USAGE / UPTIMES ══
+function syncTabDot(idx, state) {
+    // No slot tabs in new design — just update home cards
+}
+function updateSlotUsage() {
+    const used = slots.filter(s=>s.status!=='empty').length;
+    setEl('slotUsageLabel', used+' / 3');
+    const f = document.getElementById('slotFill'); if(f) f.style.width=(used/3*100)+'%';
+}
+function updateNavCount() {
+    const active = slots.filter(s=>s.status==='running').length;
+    setEl('homeActiveBots', active);
+}
+function tickUptimes() {
+    slots.forEach((s,i) => {
+        if (s.status==='running' && s.startTime) {
+            s.uptime = Math.floor((Date.now()-s.startTime)/1000);
+            // Update home card uptime in-place (no re-render needed)
+            const cardUt = document.getElementById('card-ut-'+i);
+            if (cardUt) cardUt.textContent = fmtTime(s.uptime);
+            // Update deploy page uptime for active slot
+            if (i===activeSlot) setEl('stUptime', fmtTime(s.uptime));
+            // Update bot page uptime if open and same slot
+            if (document.getElementById('botPage').classList.contains('active') && currentBotSlot===i) {
+                setEl('bpUptime', fmtTime(s.uptime));
+            }
+        }
+    });
+    const r = slots.find(s=>s.status==='running');
+    setEl('homeUptime', r ? fmtTime(r.uptime) : '—');
+}
+function fmtTime(sec) { return [Math.floor(sec/3600),Math.floor((sec%3600)/60),sec%60].map(n=>String(n).padStart(2,'0')).join(':'); }
+
+// ══ STORAGE ══
+function saveSlotsToStorage() { try { sessionStorage.setItem('bd_'+userId, JSON.stringify(slots.map(s=>({...s})))); } catch(_) {} }
+function loadSlotsFromStorage() {
+    try { const raw=sessionStorage.getItem('bd_'+userId); if(!raw) return; JSON.parse(raw).forEach((d,i)=>{ if(slots[i]) Object.assign(slots[i],d); }); } catch(_) {}
+}
+
+// ══ FAQ ══
+function populateFAQ() {
+    const faqs=[
+        {q:'Pairing code not working?',a:'WhatsApp → Settings → Linked Devices → Link a Device, enter the code.'},
+        {q:'Stuck on Verifying?',a:'Wait up to 2 mins. If still stuck, stop the bot and redeploy.'},
+        {q:'Commands not responding?',a:'Confirm bot shows Online (green dot), then try [prefix]help.'},
+        {q:'How to edit bot settings?',a:"Tap your bot's name in the sidebar (My Bots section) or tap the bot card on Overview."},
+    ];
+    const el = document.getElementById('faqItems'); if (!el) return;
+    el.innerHTML = faqs.map(f => '<div style="background:var(--s3);border:1px solid var(--b1);border-radius:var(--rm);padding:.6875rem;cursor:pointer" onclick="this.querySelector(\'.fa\').style.display=this.querySelector(\'.fa\').style.display===\'block\'?\'none\':\'block\'"><div style="font-size:.8125rem;font-weight:700;font-family:var(--fd)">'+f.q+'</div><div class="fa" style="display:none;font-size:.8rem;color:var(--t2);margin-top:.325rem;line-height:1.5">'+f.a+'</div></div>').join('');
+}
+
+// ══ NOTIFS ══
+function toggleNotifPanel() { document.getElementById('notifPanel').classList.toggle('show'); }
+function clearNotifs() { document.getElementById('notifList').innerHTML='<div style="padding:1.25rem;text-align:center;font-size:.875rem;color:var(--t2)">No notifications</div>'; document.getElementById('notifPip').style.display='none'; document.getElementById('notifPanel').classList.remove('show'); }
+function addNotif(title, body, type='i') {
+    const icons={s:'✓',e:'✕',i:'i',w:'!'};
+    const item=document.createElement('div'); item.className='notif-item';
+    item.innerHTML='<div class="ni-icon '+type+'">'+(icons[type]||'i')+'</div><div><div class="ni-title">'+esc(title)+'</div><div class="ni-body">'+esc(body)+'</div><div class="ni-time">Just now</div></div>';
+    const list=document.getElementById('notifList');
+    list.insertBefore(item,list.firstChild);
+    document.getElementById('notifPip').style.display='';
+}
+document.addEventListener('click', e => {
+    const p=document.getElementById('notifPanel'), b=document.getElementById('notifToggle');
+    if (p?.classList.contains('show') && !p.contains(e.target) && !b?.contains(e.target)) p.classList.remove('show');
+});
+
+// ══ MODAL ══
+function openModal(msg, cb) { document.getElementById('modalMsg').textContent=msg; document.getElementById('confirmModal').classList.add('show'); modalCb=cb; document.getElementById('modalOk').onclick=()=>{ closeModal(); if(modalCb) modalCb(); }; }
+function closeModal() { document.getElementById('confirmModal').classList.remove('show'); modalCb=null; }
+
+// ══ HELPERS ══
+function setEl(id, val) { const e=document.getElementById(id); if(e) e.textContent=val; }
+function setToggle(id, on) { const e=document.getElementById(id); if(e) { if(on) e.classList.add('on'); else e.classList.remove('on'); } }
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function getColorForUser(uid) {
+    const p=['#e8002d','#3b82f6','#10b981','#f59e0b','#8b5cf6','#06b6d4','#ec4899','#14b8a6'];
+    if (!uid) return p[0];
+    let h=0; for(let i=0;i<uid.length;i++) h=uid.charCodeAt(i)+((h<<5)-h);
+    return p[Math.abs(h)%p.length];
+}
+async function apiFetch(url, opts={}) {
+    opts.headers=Object.assign({'User-Id':userId,'Content-Type':'application/json'},opts.headers||{});
+    const r=await fetch(url,opts); return r.json();
+}
+function goDeploySlot(idx) {
+    activeSlot=idx; gotoPage('deploy',null);
+    const s=slots[idx];
+    const bn=document.getElementById('botName'); if(bn) bn.value=s.name&&!s.name.match(/^Bot \d$/)?s.name:'';
+    const pn=document.getElementById('phoneNum'); if(pn) pn.value=s.number||'';
+    document.querySelectorAll('[name=pfx]').forEach(r=>{ if(r.value===(s.prefix||'none')) r.checked=true; });
+    setEl('stSlot','Slot '+(idx+1)); setEl('stPrefix',s.prefix||'none');
+    syncDeployUI(s.status);
+    log('▶ Ready to deploy Bot '+(idx+1),'info');
+}
+function quickStop(idx) { activeSlot=idx; stopDeploy(); }
+function doLogout() {
+    openModal('Sign out of BIG DADDY V4?', () => {
+        stopCommunityPolling();
+        fetch('/api/logout',{method:'POST',headers:{'User-Id':userId}}).catch(_=>{}).finally(()=>{
+            sessionStorage.clear();
+            if(window.Telegram?.WebApp) Telegram.WebApp.close();
+            else location.href='/';
+        });
+    });
+}
+</script>
+</body>
+</html>
