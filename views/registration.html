@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>BIG DADDY V4 — Create Account</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --red:#e8002d;--red-h:#c4002a;--red-s:rgba(232,0,45,0.08);--red-b:rgba(232,0,45,0.22);
+  --bg:#0d0f14;--s1:#161a22;--s2:#1d2130;--s3:#232840;
+  --b1:rgba(255,255,255,0.06);--b2:rgba(255,255,255,0.1);
+  --t1:#f0f2f7;--t2:#8892a4;--t3:#4a5568;
+  --green:#10b981;
+  --r-md:0.75rem;--r-lg:1rem;--r-xl:1.25rem;
+  --sh:0 4px 24px rgba(0,0,0,0.45);
+  --ff:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+html,body{min-height:100%;background:var(--bg);font-family:var(--ff);color:var(--t1);-webkit-font-smoothing:antialiased}
+body{display:flex;align-items:center;justify-content:center;padding:1.5rem;min-height:100vh}
+
+/* ── background glow ── */
+body::before{
+  content:'';position:fixed;inset:0;
+  background:radial-gradient(ellipse 60% 40% at 50% 0%,rgba(232,0,45,0.1) 0%,transparent 70%);
+  pointer-events:none;z-index:0;
+}
+
+.wrap{width:100%;max-width:420px;animation:fadeUp 0.3s ease;position:relative;z-index:1}
+
+/* ── header ── */
+.header{text-align:center;margin-bottom:2rem}
+.logo-wrap{margin-bottom:1.25rem;display:flex;flex-direction:column;align-items:center;gap:0}
+.logo-icon{width:52px;height:52px;margin-bottom:0}
+.logo-ring{
+  width:52px;height:52px;border-radius:50%;
+  border:1.5px solid var(--red-b);
+  display:flex;align-items:center;justify-content:center;
+  background:var(--red-s);
+  box-shadow:0 0 0 6px rgba(232,0,45,0.06),0 6px 20px rgba(232,0,45,0.2);
+  position:relative;
+}
+.logo-ring::before{
+  content:'';position:absolute;inset:-6px;border-radius:50%;
+  border:1px dashed rgba(232,0,45,0.2);
+  animation:spin 12s linear infinite;
+}
+.header h1{font-size:1.5rem;font-weight:800;letter-spacing:-0.03em;line-height:1.1;margin-bottom:0.35rem}
+.header h1 em{color:var(--red);font-style:normal}
+.header p{font-size:0.8rem;color:var(--t2);font-weight:500}
+
+/* ── card ── */
+.card{
+  background:var(--s1);
+  border:1px solid var(--b1);
+  border-radius:var(--r-xl);
+  padding:1.75rem;
+  box-shadow:var(--sh);
+}
+.card-title{font-size:1rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:0.3rem}
+.card-sub{font-size:0.8rem;color:var(--t2);margin-bottom:1.5rem}
+
+/* ── fields ── */
+.field{margin-bottom:1rem}
+.field label{display:block;font-size:0.6875rem;font-weight:600;color:var(--t2);margin-bottom:0.3rem;letter-spacing:0.04em;text-transform:uppercase}
+.field input{
+  width:100%;padding:0.625rem 0.875rem;
+  background:var(--s2);border:1.5px solid var(--b2);
+  border-radius:var(--r-md);font-size:0.9rem;
+  color:var(--t1);font-family:var(--ff);
+  outline:none;transition:border-color 0.2s,background 0.2s;
+  caret-color:var(--red);
+}
+.field input::placeholder{color:var(--t3)}
+.field input:focus{border-color:var(--red);background:rgba(232,0,45,0.04);box-shadow:0 0 0 3px rgba(232,0,45,0.1)}
+
+/* ── button ── */
+.btn{
+  width:100%;padding:0.6875rem;margin-top:0.25rem;
+  background:var(--red);border:none;border-radius:var(--r-md);
+  color:#fff;font-size:0.9rem;font-weight:700;
+  font-family:var(--ff);letter-spacing:0.01em;
+  cursor:pointer;transition:background 0.2s,transform 0.15s,box-shadow 0.2s;
+  display:flex;align-items:center;justify-content:center;gap:0.5rem;
+}
+.btn:hover:not(:disabled){background:var(--red-h);transform:translateY(-1px);box-shadow:0 6px 18px rgba(232,0,45,0.35)}
+.btn:disabled{opacity:0.5;cursor:not-allowed;transform:none}
+.spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block}
+
+/* ── message ── */
+.msg{display:none;font-size:0.8125rem;font-weight:500;padding:0.625rem 0.875rem;border-radius:var(--r-md);margin-bottom:1rem;text-align:center}
+.msg.success{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:var(--green)}
+.msg.error{background:var(--red-s);border:1px solid var(--red-b);color:var(--red)}
+
+/* ── footer ── */
+.footer{text-align:center;margin-top:1.25rem;font-size:0.725rem;color:var(--t3);line-height:1.6}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <div class="header">
+    <div class="logo-wrap">
+      <div class="logo-ring">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- circuit board / bot icon -->
+          <rect x="7" y="6" width="12" height="10" rx="2" stroke="#e8002d" stroke-width="1.5" fill="none"/>
+          <circle cx="10" cy="10" r="1.2" fill="#e8002d"/>
+          <circle cx="16" cy="10" r="1.2" fill="#e8002d"/>
+          <rect x="11" y="12" width="4" height="1.5" rx="0.75" fill="#e8002d"/>
+          <line x1="10" y1="6" x2="10" y2="4" stroke="#e8002d" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="16" y1="6" x2="16" y2="4" stroke="#e8002d" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="7" y1="10" x2="4" y2="10" stroke="#e8002d" stroke-width="1.5" stroke-linecap="round"/>
+          <line x1="19" y1="10" x2="22" y2="10" stroke="#e8002d" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M9 16 L9 19 L13 21 L17 19 L17 16" stroke="#e8002d" stroke-width="1.5" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+    </div>
+    <h1>BIG DADDY <em>V4</em></h1>
+    <p>WhatsApp Bot Management</p>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Create your account</div>
+    <div class="card-sub">Fill in your details to get started</div>
+
+    <div id="msg" class="msg"></div>
+
+    <form id="regForm" autocomplete="off">
+      <div class="field">
+        <label for="firstName">First Name</label>
+        <input type="text" id="firstName" name="firstName" placeholder="e.g. Philip" required>
+      </div>
+      <div class="field">
+        <label for="lastName">Last Name</label>
+        <input type="text" id="lastName" name="lastName" placeholder="e.g. Okonkwo" required>
+      </div>
+      <div class="field">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" required>
+      </div>
+      <button type="submit" class="btn" id="submitBtn">Create Account</button>
+    </form>
+  </div>
+
+  <div class="footer">By creating an account you agree to our Terms of Service</div>
+
+</div>
+
+<script>
+(function() {
+  const pathSegments = window.location.pathname.split('/');
+  const userId = pathSegments[pathSegments.length - 1];
+
+  const form     = document.getElementById('regForm');
+  const msgEl    = document.getElementById('msg');
+  const submitBtn = document.getElementById('submitBtn');
+
+  function showMsg(text, type) {
+    msgEl.textContent = text;
+    msgEl.className = 'msg ' + type;
+    msgEl.style.display = 'block';
+  }
+
+  function setLoading(on) {
+    submitBtn.disabled = on;
+    submitBtn.innerHTML = on
+      ? '<div class="spinner"></div> Creating account…'
+      : 'Create Account';
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    msgEl.style.display = 'none';
+
+    const firstName = document.getElementById('firstName').value.trim();
+    const lastName  = document.getElementById('lastName').value.trim();
+    const email     = document.getElementById('email').value.trim();
+
+    if (!firstName || !lastName || !email) {
+      showMsg('Please fill in all fields', 'error');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showMsg('Please enter a valid email address', 'error');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const res = await fetch('/register/' + userId, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ firstName, lastName, email })
+      });
+      const result = await res.json();
+
+      if (result.success) {
+        showMsg('Account created! Taking you to your dashboard…', 'success');
+        setTimeout(() => {
+          if (result.redirectUrl) {
+            window.location.href = result.redirectUrl;
+          } else if (window.Telegram?.WebApp) {
+            Telegram.WebApp.close();
+          }
+        }, 1500);
+      } else {
+        showMsg(result.error || 'Something went wrong', 'error');
+        setLoading(false);
+      }
+    } catch (err) {
+      showMsg('Network error — please try again', 'error');
+      setLoading(false);
+    }
+  });
+
+  if (window.Telegram?.WebApp) {
+    Telegram.WebApp.ready();
+    Telegram.WebApp.expand();
+  }
+})();
+</script>
+</body>
+</html>
